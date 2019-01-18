@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sales Geo Map</title>
+    <link rel="stylesheet" href="/static/css/master.css">
+    <link rel="icon" href="/static/images/usafavicon.png">
+</head>
+<body>
+    <!-- Holds the menu, title, today's date. Eventually options. -->
+    <header>
+    <div class="container top-bar">
+        <h1 class="logo">Sales Geo Map</h1>
+        <strong><ul class="menu">
+            <li><span>Today's Date</span></li>
+            <li><span>Schedule</span></li>
+            <li><span>Nothing</span></li>
+        </ul></strong>
+
+    </div>
+        {% block header %}
+        {% endblock %}
+    </header>
+    <div class="container status">
+        <h1>The data was updated at 'This time'</h1>
+        <p>Created by Karl Keisel</p>
+    </div>
+    <hr>
+    <!-- Holds the map object. -->
+    <div class="container map-box">
+        <iframe class="map" src="{{ url_for('geo_map') }}"></iframe>
+    </div>
+    <!-- Set up just in case needed. Most likely just a bottom bar for spacing. -->
+    <div class="container bottom-bar">
+
+    </div>
+
+    <div class="container credits">Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+</body>
+</html>
