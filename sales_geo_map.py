@@ -21,7 +21,7 @@ A way to auto update from data source to find any changes and to update the info
 
 # TODO Main flask file that holds the front end and connects the back end.
 
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
 
 app = Flask(__name__)
 
@@ -34,6 +34,12 @@ def index():
 @app.route('/geo_map/')
 def geo_map():
     return render_template('geo_map.html')
+
+
+@app.route('/usafavicon.png')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static', 'images'),
+                               'usafavicon.png', mimetype='image/png')
 
 
 if __name__ == "__main__":
