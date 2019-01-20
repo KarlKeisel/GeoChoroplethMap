@@ -22,6 +22,7 @@ A way to auto update from data source to find any changes and to update the info
 # TODO Main flask file that holds the front end and connects the back end.
 
 from flask import Flask, render_template, send_from_directory
+import os
 
 app = Flask(__name__)
 
