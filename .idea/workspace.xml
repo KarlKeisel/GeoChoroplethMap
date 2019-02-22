@@ -1,33 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ccd4a7f5-59c5-4771-8eeb-9b8c6942679b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/extra/fake_data_generator.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/extra/melissa_address_scraper.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/extra/sample_data/Address_List_Test0.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/extra/sample_data/Address_List_Test1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/extra/sample_data/Address_List_Test2.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/extra/sample_data/Address_List_Test3.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/extra/sample_data/Address_List_Test4.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/extra/sample_data/Address_List_Test5.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/extra/sample_data/Address_List_Test6.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/extra/sample_data/Address_List_Test7.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/extra/sample_data/Address_List_Test8.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/extra/sample_data/sample_data.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/extra/sample_data/sample_data_tiny.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/extra/sample_data/test_list.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schedule/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schedule/predictor.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schedule/scheduler.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_sales_inserter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL/postgresqlcommands.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL/postgresqlcommands.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/map_data/choropleth_maker.py" beforeDir="false" afterPath="$PROJECT_DIR$/map_data/choropleth_maker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sales_geo_map.py" beforeDir="false" afterPath="$PROJECT_DIR$/sales_geo_map.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sales_inserter.py" beforeDir="false" afterPath="$PROJECT_DIR$/sales_inserter.py" afterDir="false" />
-    </list>
+    <list default="true" id="ccd4a7f5-59c5-4771-8eeb-9b8c6942679b" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,8 +51,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/sales_inserter.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="190">
-                  <caret line="43" column="40" selection-start-line="43" selection-start-column="40" selection-end-line="43" selection-end-column="40" />
+                <state relative-caret-position="132">
+                  <caret line="47" column="51" selection-start-line="47" selection-start-column="51" selection-end-line="47" selection-end-column="51" />
                 </state>
               </provider>
             </entry>
@@ -405,12 +379,12 @@
       <workItem from="1548876730285" duration="36000000" />
       <workItem from="1550764048602" duration="69000" />
       <workItem from="1550764258946" duration="12908000" />
-      <workItem from="1550800967855" duration="1545000" />
+      <workItem from="1550800967855" duration="2462000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="91516000" />
+    <option name="totallyTimeSpent" value="92433000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -767,8 +741,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sales_inserter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="43" column="40" selection-start-line="43" selection-start-column="40" selection-end-line="43" selection-end-column="40" />
+        <state relative-caret-position="132">
+          <caret line="47" column="51" selection-start-line="47" selection-start-column="51" selection-end-line="47" selection-end-column="51" />
         </state>
       </provider>
     </entry>
