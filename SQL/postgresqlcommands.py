@@ -22,18 +22,18 @@ def create_table():     # Creating initial table code
                 "cost INT)")
     cur.execute("CREATE TABLE IF NOT EXISTS sale ("         # Sale table
                 "id SERIAL PRIMARY KEY,"
-                "patient INTEGER REFERENCES patients(id),"
+                "patient INTEGER REFERENCES patients(id) ON UPDATE CASCADE ON DELETE CASCADE,"
                 "purchase_time TIMESTAMP,"
                 "total_paid INT,"
                 "used_ins VARCHAR(50))")                    # Insurance name (Not worried about amount)
     cur.execute("CREATE TABLE IF NOT EXISTS sale_item ("    # Many to many table
                 "id SERIAL PRIMARY KEY,"
-                "product_id INTEGER REFERENCES products(id),"
-                "sale_id INTEGER REFERENCES sale(id),"
+                "product_id INTEGER REFERENCES products(id) ON UPDATE CASCADE,"
+                "sale_id INTEGER REFERENCES sale(id) ON UPDATE CASCADE ON DELETE CASCADE,"
                 "price INT)")                              # Recorded separately in case pricing changes
     cur.execute("CREATE TABLE IF NOT EXISTS schedule ("
                 "id SERIAL PRIMARY KEY,"
-                "patient INTEGER REFERENCES patients(id),"
+                "patient INTEGER REFERENCES patients(id) ON UPDATE CASCADE ON DELETE CASCADE,"
                 "appt_time TIME,"
                 "appt_date DATE,"
                 "appt_type VARCHAR(50),"
@@ -117,14 +117,14 @@ class DBCommands(object):
         else:
             self._commit_close()
 
-    def view(self, table, conditional=None, command=False):
+    def view(self, table, conditional=None, command=False, field="*"):
         self._connect()
         if command:
-            self.cur.execute(f"SELECT * FROM {str(table)} WHERE {str(conditional[0])} {str(conditional[1])}")
-        if conditional:
-            self.cur.execute(f"SELECT * FROM {str(table)} WHERE {str(conditional[0])} = '{str(conditional[1])}'")
+            self.cur.execute(f"SELECT {field} FROM {str(table)} WHERE {str(conditional[0])} {str(conditional[1])}")
+        elif conditional:
+            self.cur.execute(f"SELECT {field} FROM {str(table)} WHERE {str(conditional[0])} = '{str(conditional[1])}'")
         else:
-            self.cur.execute(f"SELECT * FROM {str(table)}")
+            self.cur.execute(f"SELECT {field} FROM {str(table)}")
         rows = self.cur.fetchall()
         self.conn.close()
         return rows
@@ -136,10 +136,20 @@ class DBCommands(object):
 
     def update(self, values):
         self._connect()
-        self._sql_statement_update(values)
+        self._sql_statement_update(values, datetime)
         self.cur.execute(f"UPDATE {self.table} SET {self.columns} WHERE "
                          f"{str(self.condition[0])} = '{str(self.condition[1])}'")
         self._commit_close()
+
+    def update_timestamp(self, patient, datetime):  # Special for updating a datetime object
+        self._connect()     # TODO Work on figuring out how to update datetime objects into SQL
+        self.cur.execute(f"UPDATE 'patients' SET 'lastpurchase' = {datetime} WHERE 'patient' = {patient}")
+        self._commit_close()
+
+    def rollback(self):
+        print('DB Error')
+        self.conn.rollback()
+        self.conn.close()
 
 
 if __name__ == '__main__':

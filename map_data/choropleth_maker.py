@@ -10,7 +10,7 @@ Name, Address, Geo-Coordinates, Age, Average Dollar Amount.
 import folium
 import pandas as pd
 
-
+# TODO provide a link to data / data base when pulling for the file.
 def create_map(file="sample_data.csv"):
 
     data = pd.read_csv(file)   # Pull out data

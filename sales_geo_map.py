@@ -19,7 +19,7 @@ A scheduler that can populate a form to be printed out that shows patients for t
 A way to auto update from data source to find any changes and to update the information.
 """
 
-# TODO Main flask file that holds the front end and connects the back end.
+# Main flask file that holds the front end and connects the back end.
 
 from flask import Flask, render_template, send_from_directory
 import os
@@ -35,6 +35,8 @@ def index():
 @app.route('/geo_map/')
 def geo_map():
     return render_template('geo_map.html')
+
+# TODO Make scheduler page that will display the schedule for patients and prediction model. Updates when requested.
 
 
 @app.route('/usafavicon.png')
