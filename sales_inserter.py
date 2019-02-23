@@ -55,11 +55,17 @@ class InsertItem(object):   # This would connect to the front end to allow DB ed
         # TODO Work on updating datetime on last purchase
         # self.db.update_timestamp(patient, sale_time)
 
-    def quick_sale(self, patient_id, insurance):
-        pass
+    def quick_sale(self, patient_id, time, insurance, item_ids):    # Used for quickly inputting sales for testing
+        items = []
+        for item_id in item_ids:
+            items.append(self.db.view('products', field="product, cost", conditional=("id", item_id))[0])
+        patient = self.db.view('patients', field="patient_name", conditional=("id", patient_id))[0][0]
+        print(patient, time, insurance, items)
+        self.insert_sale(patient, time, insurance, items)
 
     def sales_viewer(self, patient, time=None, ):
         pass
+    # TODO Way to look up and print out sales during a certain date?
 
 
 class Observer(object):  # Will keep record of any changes so nightly updates are far faster.

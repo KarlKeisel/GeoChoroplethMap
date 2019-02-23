@@ -77,7 +77,7 @@ class DBCommands(object):
 
     def _connect(self):
         self.conn = psycopg2.connect("dbname='Eyecare' user='postgres' password='NotPassw0rd' "
-                                     "host='localhost' port='5432'")
+                                     "host='localhost' port='5432'")  # TODO Work on outside password / login
         self.cur = self.conn.cursor()
 
     def _commit_close(self):  # Decide to split up in the future. Maybe one for commits/rollbacks and one for closing.
@@ -136,7 +136,7 @@ class DBCommands(object):
 
     def update(self, values):
         self._connect()
-        self._sql_statement_update(values, datetime)
+        self._sql_statement_update(values)
         self.cur.execute(f"UPDATE {self.table} SET {self.columns} WHERE "
                          f"{str(self.condition[0])} = '{str(self.condition[1])}'")
         self._commit_close()
