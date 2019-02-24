@@ -14,8 +14,8 @@ def create_table():     # Creating initial table code
                 "gender VARCHAR(50),"
                 "lat NUMERIC,"
                 "lon NUMERIC,"
-                "firstpurchase TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"                  # Or first date created
-                "lastpurchase TIMESTAMP)")
+                "first_purchase DATE DEFAULT CURRENT_DATE,"                  # Or first date created
+                "last_purchase DATE)")
     cur.execute("CREATE TABLE IF NOT EXISTS products ("     # Product list table
                 "id SERIAL PRIMARY KEY,"
                 "product VARCHAR(255) UNIQUE,"
@@ -23,7 +23,7 @@ def create_table():     # Creating initial table code
     cur.execute("CREATE TABLE IF NOT EXISTS sale ("         # Sale table
                 "id SERIAL PRIMARY KEY,"
                 "patient INTEGER REFERENCES patients(id) ON UPDATE CASCADE ON DELETE CASCADE,"
-                "purchase_time TIMESTAMP,"
+                "purchase_time DATE,"
                 "total_paid INT,"
                 "used_ins VARCHAR(50))")                    # Insurance name (Not worried about amount)
     cur.execute("CREATE TABLE IF NOT EXISTS sale_item ("    # Many to many table
@@ -106,8 +106,9 @@ class DBCommands(object):
         for column in values:
             self.columns += str(column[0] + " = " + str(column[1]))
 
-    def insert(self, values):
-        self._connect()
+    def insert(self, values, slow=True):
+        if slow:
+            self._connect()
         self._sql_statement_insert(values)
         try:
             self.cur.execute(f"INSERT INTO {self.table} ({self.columns}) VALUES ({self.values})")
@@ -115,10 +116,14 @@ class DBCommands(object):
             print(f"Item: {str(values[0][1])} already exists, use the update command.")  # Checks for duplicate products
             self.conn.rollback()
         else:
-            self._commit_close()
+            if slow:
+                self._commit_close()
+            else:
+                pass
 
-    def view(self, table, conditional=None, command=False, field="*"):
-        self._connect()
+    def view(self, table, conditional=None, command=False, field="*", slow=True):
+        if slow:
+            self._connect()
         if command:
             self.cur.execute(f"SELECT {field} FROM {str(table)} WHERE {str(conditional[0])} {str(conditional[1])}")
         elif conditional:
@@ -126,7 +131,8 @@ class DBCommands(object):
         else:
             self.cur.execute(f"SELECT {field} FROM {str(table)}")
         rows = self.cur.fetchall()
-        self.conn.close()
+        if slow:
+            self.conn.close()
         return rows
 
     def delete(self, table, conditional):
@@ -141,10 +147,12 @@ class DBCommands(object):
                          f"{str(self.condition[0])} = '{str(self.condition[1])}'")
         self._commit_close()
 
-    def update_timestamp(self, patient, datetime):  # Special for updating a datetime object
-        self._connect()     # TODO Work on figuring out how to update datetime objects into SQL
-        self.cur.execute(f"UPDATE 'patients' SET 'lastpurchase' = {datetime} WHERE 'patient' = {patient}")
-        self._commit_close()
+    def update_timestamp(self, patient_id, datetime, slow=True):  # Special for updating a datetime object
+        if slow:
+            self._connect()     # TODO Work on figuring out how to update datetime objects into SQL
+        self.cur.execute(f"UPDATE patients SET last_purchase = '{datetime}' WHERE id = {patient_id}")
+        if slow:
+            self._commit_close()
 
     def rollback(self):
         print('DB Error')

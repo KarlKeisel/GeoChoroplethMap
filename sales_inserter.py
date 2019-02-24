@@ -15,10 +15,10 @@ class InsertItem(object):   # This would connect to the front end to allow DB ed
     def __init__(self):
         self.db = DBCommands()
 
-    def _id_lookup(self, table, column, item):  # Returns id of item
+    def _id_lookup(self, table, column, item, slow=True):  # Returns id of item
         id_key = None
         try:
-            id_key = self.db.view(table, conditional=(column, item), field="id")
+            id_key = self.db.view(table, conditional=(column, item), field="id", slow=slow)
         except Exception:
             self.db.rollback()
         if id_key is None:
@@ -52,20 +52,28 @@ class InsertItem(object):   # This would connect to the front end to allow DB ed
         for item in items:  # Creating sale_item table
             self.db.insert(['sale_item', ('product_id', item[0]), ('sale_id', sale_id), ('price', item[1])])
 
-        # TODO Work on updating datetime on last purchase
-        # self.db.update_timestamp(patient, sale_time)
+        self.db.update_timestamp(patient, sale_time)
+        print(f"Patient {patient} recorded.")
 
     def quick_sale(self, patient_id, time, insurance, item_ids):    # Used for quickly inputting sales for testing
+        total_sum = 0
+        sale_time = time if time else dt.datetime.now()  # Insert current time if none supplied
         items = []
-        for item_id in item_ids:
-            items.append(self.db.view('products', field="product, cost", conditional=("id", item_id))[0])
-        patient = self.db.view('patients', field="patient_name", conditional=("id", patient_id))[0][0]
-        print(patient, time, insurance, items)
-        self.insert_sale(patient, time, insurance, items)
 
-    def sales_viewer(self, patient, time=None, ):
-        pass
-    # TODO Way to look up and print out sales during a certain date?
+        for item_id in item_ids:
+            items.append(self.db.view('products', field="id, cost", conditional=("id", item_id), slow=False)[0])
+            total_sum += int(items[0][1])
+
+        self.db.insert(['sale', ('patient', patient_id), ('purchase_time', sale_time),
+                        ('total_paid', total_sum), ('used_ins', insurance)], slow=False)
+
+        sale_id = self._id_lookup('sale', 'purchase_time', sale_time, slow=False)
+
+        for item in items:  # Creating sale_item table
+            self.db.insert(['sale_item', ('product_id', item[0]), ('sale_id', sale_id), ('price', item[1])], slow=False)
+
+        self.db.update_timestamp(patient_id, sale_time, slow=False)
+        print(f"Patient {patient_id} recorded.")
 
 
 class Observer(object):  # Will keep record of any changes so nightly updates are far faster.

@@ -14,7 +14,7 @@ for item in products:
 
 # ii.quick_sale("1332", None, 'VSP', [1, 5, 6])
 
-# ii.insert_sale('Angeles Pollard', purchase_items=[('Eye Exam', 8500), ('Refraction', 4900)])  # Works!
+# ii.insert_sale('Newton Powers', purchase_items=[('Eye Exam', 8500), ('Refraction', 4900)])  # Works!
 
 # ii.db.delete('sale', ('patient', 1332))
 
@@ -30,4 +30,4 @@ print(sales_items)
 # patient = ii.db.view('patients', ('patient_name', 'Angeles Pollard'))
 # print(patient)
 
-
+print(ii.db.view('sale', ('purchase_time::date', '2019-02-23')))
