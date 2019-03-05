@@ -23,11 +23,18 @@ for item in products:
 
 sales = ii.db.view('sale')
 print(sales)
-
-sales_items = ii.db.view('sale_item')
-print(sales_items)
+#
+# sales_items = ii.db.view('sale_item')
+# print(sales_items)
 
 # patient = ii.db.view('patients', ('patient_name', 'Angeles Pollard'))
 # print(patient)
 
-print(ii.db.view('sale', ('purchase_time::date', '2019-02-23')))
+# print(ii.db.view('sale', ('purchase_time::date', '2019-02-23')))
+#
+# ii.db._connect()
+# for i in range(2100):
+#     ii.db.update_avg_dollar(i, slow=False)    # Works!
+#
+# ii.db._commit_close()
+

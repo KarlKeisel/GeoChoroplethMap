@@ -9,13 +9,13 @@ def create_table():     # Creating initial table code
                 "patient_name VARCHAR(100) NOT NULL,"
                 "address VARCHAR(255),"
                 "insurance VARCHAR(100),"
-                "avgdollar INT,"                            # Stored as whole number, must divide out.
+                "avg_dollar INT DEFAULT 0,"      # Stored as whole number, must divide out. Has trigger in server
                 "age SMALLINT,"
                 "gender VARCHAR(50),"
                 "lat NUMERIC,"
                 "lon NUMERIC,"
                 "first_purchase DATE DEFAULT CURRENT_DATE,"                  # Or first date created
-                "last_purchase DATE)")
+                "last_purchase DATE)")            # Will have trigger in server, uses python code now.
     cur.execute("CREATE TABLE IF NOT EXISTS products ("     # Product list table
                 "id SERIAL PRIMARY KEY,"
                 "product VARCHAR(255) UNIQUE,"
@@ -38,6 +38,13 @@ def create_table():     # Creating initial table code
                 "appt_date DATE,"
                 "appt_type VARCHAR(50),"
                 "showed BOOLEAN)")
+    cur.execute("CREATE TABLE IF NOT EXISTS auto_patient ("  # Table for setting up dummy data
+                "id SERIAL PRIMARY KEY,"
+                "patient_id INTEGER REFERENCES patients(id) ON UPDATE CASCADE ON DELETE CASCADE,"
+                "patient_type VARCHAR(50),"
+                "last_exam_date DATE,"
+                "last_glasses_purchase_date DATE,"
+                "last_cl_purchase_date DATE)")
     conn.commit()
     conn.close()
 
@@ -146,6 +153,15 @@ class DBCommands(object):
         self.cur.execute(f"UPDATE {self.table} SET {self.columns} WHERE "
                          f"{str(self.condition[0])} = '{str(self.condition[1])}'")
         self._commit_close()
+
+    def update_avg_dollar(self, patient_id, slow=True):
+        if slow:
+            self._connect()     # TODO Work on plpgsql trigger to do this automatically
+        self.cur.execute(f"UPDATE patients SET avg_dollar = "
+                         f"(SELECT AVG(total_paid) FROM sale WHERE patient = {patient_id})"
+                         f"WHERE id = {patient_id}")
+        if slow:
+            self._commit_close()
 
     def update_timestamp(self, patient_id, datetime, slow=True):  # Special for updating a datetime object
         if slow:

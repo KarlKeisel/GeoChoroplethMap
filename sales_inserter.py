@@ -34,6 +34,7 @@ class InsertItem(object):   # This would connect to the front end to allow DB ed
             self.db.rollback()
 
     def insert_sale(self, patient, time=None, insurance='None', purchase_items=(('Test', 0))):
+        # Slow and terrible, quick_sale will be the main input function.
         # Expects a nested list with [item, price] as each item.
         total_sum = 0
         sale_time = time if time else dt.datetime.now()  # Insert current time if none supplied
@@ -52,6 +53,7 @@ class InsertItem(object):   # This would connect to the front end to allow DB ed
         for item in items:  # Creating sale_item table
             self.db.insert(['sale_item', ('product_id', item[0]), ('sale_id', sale_id), ('price', item[1])])
 
+        self.db.update_avg_dollar(patient_id)
         self.db.update_timestamp(patient, sale_time)
         print(f"Patient {patient} recorded.")
 
@@ -72,6 +74,7 @@ class InsertItem(object):   # This would connect to the front end to allow DB ed
         for item in items:  # Creating sale_item table
             self.db.insert(['sale_item', ('product_id', item[0]), ('sale_id', sale_id), ('price', item[1])], slow=False)
 
+        self.db.update_avg_dollar(patient_id,slow=False)
         self.db.update_timestamp(patient_id, sale_time, slow=False)
         print(f"Patient {patient_id} recorded.")
 
