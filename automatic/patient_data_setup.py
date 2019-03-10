@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import random
+from SQL.postgresqlcommands import DBCommands
+from SQL.sales_inserter import InsertItem
 
 """
 Creates dummy patient data using a formula to make a purchasing pattern.
@@ -30,11 +32,10 @@ Advance calendar forwards.
 1 : Exam every other year, often buying nothing but exam.
 """
 
+# TODO Patient must already exist in patient table, maybe find a way to pull new patient completely. (Final task)
+
 
 class Patient(object):
-
-    patient_list = []   # Keep track of all patients who are purchasing. Possibly a bad idea once it grows too big.
-    # Or just look at DB every 'day' that passes.
 
     def __init__(self, patient_id, buying_pattern=None):
         self.patient_id = patient_id
@@ -42,7 +43,8 @@ class Patient(object):
         self.patient_type = self.set_patient_type
         self.last_exam = None
         self.last_health_exam = None
-        Patient.patient_list.append(self.patient_id)    # Maybe not needed.
+        self.db = DBCommands()
+        self.ii = InsertItem()
 
     def set_patient_type(self):
         x = random.randint(1, 10)   # Set up if glasses, cl's, health as main.
@@ -61,22 +63,26 @@ class Patient(object):
             y = int(np.random.normal(3, 1.2))
         return y
 
-    def set_appointment(self):  # Set appointment and just start from early and go to latest, next day if full.
+    def set_appointment_time(self, appt_time):    # Will make sure appointment is valid.
+        # TODO Look at scheduler and see if appointment is created
+        # TODO If open, make appointment
+        # TODO If blocked, more forward in 30 minute intervals until appt is free
+        # TODO Acknowledge appointment time, and difference between original time and new time.
         pass
 
-    def purchase(self):  # Look at age before choosing purchase
+    def set_new_appointment(self):     # Will add new patients to appointment times. (Doesn't actually set appointment)
         pass
 
-    def will_patient_purchase(self):  # Look at last purchase, and patient type
-        pass
+    # def set_appointment(self):  # Set appointment and just start from early and go to latest, next day if full.
+    #     pass
 
     def will_patient_appointment(self):  # Look at last exam date, and patient type. Set appointments ~ 20 days in adv.
         pass
 
-    def set_appointment_time(self):    # Will make sure appointment is valid.
+    def purchase(self):  # Uses quick sale to purchase when patient decides to purchase
         pass
 
-    def set_new_appointment(self):     # Will add new patients to appointment times.
+    def will_patient_purchase(self):  # Look at last purchase, and patient type
         pass
 
     def decide_purchase_type(self):    # Will decide what to buy when patient purchases.
@@ -91,5 +97,8 @@ class Patient(object):
         """
         pass
 
-    def update(self, date):  # The automated part that puts everything into action
+    def log_day(self):  # Will write to text file the number of appts and total sales that day.
+        pass
+
+    def update(self, date, log=False):  # The automated part that puts everything into action. Log_day default is off.
         pass
