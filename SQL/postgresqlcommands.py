@@ -34,8 +34,8 @@ def create_table():     # Creating initial table code
     cur.execute("CREATE TABLE IF NOT EXISTS schedule ("
                 "id SERIAL PRIMARY KEY,"
                 "patient INTEGER REFERENCES patients(id) ON UPDATE CASCADE ON DELETE CASCADE,"
-                "appt_time TIME,"
-                "appt_date DATE,"
+                "appt_time TIME,"                           # Recorded every 30 minutes, 10 - 5. 14 Total a day.
+                "appt_date DATE,"                           # Mon - Fri only
                 "appt_type VARCHAR(50),"
                 "showed BOOLEAN)")
     cur.execute("CREATE TABLE IF NOT EXISTS auto_patient ("  # Table for setting up dummy data

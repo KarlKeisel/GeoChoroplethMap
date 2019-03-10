@@ -1,5 +1,5 @@
 import random
-import sales_inserter as si
+from SQL import sales_inserter as si
 
 ii = si.InsertItem()
 big_list = random.sample(range(2119), 1000)

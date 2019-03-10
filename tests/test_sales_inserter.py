@@ -2,7 +2,7 @@
 Testing sales_inserter plus the DB Commands (Which is imported into sales_inserter
 """
 
-import sales_inserter as si
+from SQL import sales_inserter as si
 
 ii = si.InsertItem()
 # print('Asserting if _id_lookup correctly returns an id.')

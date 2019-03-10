@@ -37,7 +37,7 @@ def geo_map():
     return render_template('geo_map.html')
 
 # TODO Make scheduler page that will display the schedule for patients and prediction model. Updates when requested.
-
+# TODO Make a search list to look at patients based on name, average dollar, latest purchase.
 
 @app.route('/usafavicon.png')
 def favicon():
