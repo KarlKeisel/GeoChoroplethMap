@@ -1,4 +1,4 @@
-# GeoChoroplethMap
+# GeoChoroplethMap (Under Construction)
 Full app that takes data from a database and displays it on a choropleth map and use flask to display a schedule.
 
 
