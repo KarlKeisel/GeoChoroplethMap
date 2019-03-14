@@ -3,7 +3,7 @@ import password
 
 
 def create_table():     # Creating initial table code
-    conn = psycopg2.connect("dbname='Eyecare' user='postgres' password='NotPassw0rd' host='localhost' port='5432'")
+    conn = psycopg2.connect(f"dbname='Eyecare' user='postgres' password={password.pg_password} host='localhost' port='5432'")
     cur = conn.cursor()
     cur.execute("CREATE TABLE IF NOT EXISTS patients ("     # Patient general info table
                 "id SERIAL PRIMARY KEY,"
