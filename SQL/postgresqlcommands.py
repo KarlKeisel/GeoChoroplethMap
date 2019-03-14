@@ -87,7 +87,7 @@ class DBCommands(object):
 
     def _connect(self):
         self.conn = psycopg2.connect(f"dbname='Eyecare' user='postgres' password={password.pg_password} "
-                                     "host='localhost' port='5432'")  # TODO Work on outside password / login
+                                     "host='localhost' port='5432'")
         self.cur = self.conn.cursor()
 
     def _commit_close(self):  # Decide to split up in the future. Maybe one for commits/rollbacks and one for closing.
