@@ -1,2 +1,5 @@
 __pycache__/
 .idea/
+.pytest_cache/
+password.*
+password_test.*

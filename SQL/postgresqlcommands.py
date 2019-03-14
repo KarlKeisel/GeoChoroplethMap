@@ -1,4 +1,5 @@
 import psycopg2
+import password
 
 
 def create_table():     # Creating initial table code
@@ -16,6 +17,7 @@ def create_table():     # Creating initial table code
                 "lon NUMERIC,"
                 "first_purchase DATE DEFAULT CURRENT_DATE,"                  # Or first date created
                 "last_purchase DATE)")            # Will have trigger in server, uses python code now.
+    # TODO first_purchase functions more as 'added into system'. Rename or redesign use.
     cur.execute("CREATE TABLE IF NOT EXISTS products ("     # Product list table
                 "id SERIAL PRIMARY KEY,"
                 "product VARCHAR(255) UNIQUE,"
@@ -37,7 +39,8 @@ def create_table():     # Creating initial table code
                 "appt_time TIME,"                           # Recorded every 30 minutes, 10 - 5. 14 Total a day.
                 "appt_date DATE,"                           # Mon - Fri only
                 "appt_type VARCHAR(50),"
-                "showed BOOLEAN)")
+                "showed BOOLEAN,"                           # Did they show up?
+                "appt_slot UNIQUE (appt_time, appt_date))")           # Cannot have same appointment slot
     cur.execute("CREATE TABLE IF NOT EXISTS auto_patient ("  # Table for setting up dummy data
                 "id SERIAL PRIMARY KEY,"
                 "patient_id INTEGER REFERENCES patients(id) ON UPDATE CASCADE ON DELETE CASCADE,"
@@ -83,7 +86,7 @@ class DBCommands(object):
         self.condition = ""
 
     def _connect(self):
-        self.conn = psycopg2.connect("dbname='Eyecare' user='postgres' password='NotPassw0rd' "
+        self.conn = psycopg2.connect(f"dbname='Eyecare' user='postgres' password={password.pg_password} "
                                      "host='localhost' port='5432'")  # TODO Work on outside password / login
         self.cur = self.conn.cursor()
 
@@ -142,17 +145,21 @@ class DBCommands(object):
             self.conn.close()
         return rows
 
-    def delete(self, table, conditional):
-        self._connect()
+    def delete(self, table, conditional, slow=True):
+        if slow:
+            self._connect()
         self.cur.execute(f"DELETE FROM {str(table)} WHERE {str(conditional[0])} = '{str(conditional[1])}'")
-        self._commit_close()
+        if slow:
+            self._commit_close()
 
-    def update(self, values):
-        self._connect()
+    def update(self, values, slow=True):
+        if slow:
+            self._connect()
         self._sql_statement_update(values)
         self.cur.execute(f"UPDATE {self.table} SET {self.columns} WHERE "
                          f"{str(self.condition[0])} = '{str(self.condition[1])}'")
-        self._commit_close()
+        if slow:
+            self._commit_close()
 
     def update_avg_dollar(self, patient_id, slow=True):
         if slow:

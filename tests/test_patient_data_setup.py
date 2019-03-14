@@ -35,21 +35,21 @@ def test_patient(setup_patient):
     print(patient.patient_type)
 
 
-def test_set_appointment_time(setup_patient):
-    patient = setup_patient
-    pass
-
-
-# def test_set_new_appointment(setup_patient):
-#     patient = setup_patient
-#     pass
-
-
 def test_set_appointment(setup_patient):
     patient = setup_patient
     assert appt_date == '2000/01/01'
     assert appt_time == '12:15:00'
     # TODO test for failure if appt_time on appt_date is already taken.
+
+
+def test_make_valid_appointment(setup_patient):
+    patient = setup_patient
+    pass
+
+
+def test_set_new_appointment(setup_patient):
+    patient = setup_patient
+    pass
 
 
 def test_will_patient_appointment(setup_patient):

@@ -34,6 +34,8 @@ Advance calendar forwards.
 
 # TODO Patient must already exist in patient table, maybe find a way to pull new patient completely. (Final task)
 
+# TODO Look at maybe splitting Patient class. Could have a separate Schedule class.
+
 
 class Patient(object):
 
@@ -63,18 +65,24 @@ class Patient(object):
             y = int(np.random.normal(3, 1.2))
         return y
 
-    def set_appointment_time(self, appt_time):    # Will make sure appointment is valid.
+    def make_valid_appointment(self, appt_date, appt_time):    # Will make sure appointment is valid.
+        # TODO Make sure date is only Mon - Fri
         # TODO Look at scheduler and see if appointment is created
-        # TODO If open, make appointment
+        # TODO If open, return True
         # TODO If blocked, more forward in 30 minute intervals until appt is free
         # TODO Acknowledge appointment time, and difference between original time and new time.
         pass
 
     def set_new_appointment(self):     # Will add new patients to appointment times. (Doesn't actually set appointment)
+        # TODO Call a SELECT statement on all patients with no 'last_purchase' date
+        # TODO Randomly select 2 of them.
+        # TODO Call set_appointment_time on them.
         pass
 
-    # def set_appointment(self):  # Set appointment and just start from early and go to latest, next day if full.
-    #     pass
+    def set_appointment(self):  # Set appointment and just start from early and go to latest, next day if full.
+        # TODO Insert appointment into schedule table.
+        # TODO If error (Due to already exsisting, or on weekend) then call make_valid_appointment to find good time.
+        pass
 
     def will_patient_appointment(self):  # Look at last exam date, and patient type. Set appointments ~ 20 days in adv.
         pass
