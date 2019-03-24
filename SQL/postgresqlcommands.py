@@ -40,14 +40,16 @@ def create_table():     # Creating initial table code
                 "appt_date DATE,"                           # Mon - Fri only
                 "appt_type VARCHAR(50),"
                 "showed BOOLEAN,"                           # Did they show up?
-                "appt_slot UNIQUE (appt_time, appt_date))")           # Cannot have same appointment slot
+                "UNIQUE (appt_time, appt_date))")           # Cannot have same appointment slot
     cur.execute("CREATE TABLE IF NOT EXISTS auto_patient ("  # Table for setting up dummy data
                 "id SERIAL PRIMARY KEY,"
                 "patient_id INTEGER REFERENCES patients(id) ON UPDATE CASCADE ON DELETE CASCADE,"
-                "patient_type VARCHAR(50),"
+                "buying_pattern VARCHAR(50),"
+                "exam_type VARCHAR(50),"
                 "last_exam_date DATE,"
                 "last_glasses_purchase_date DATE,"
-                "last_cl_purchase_date DATE)")
+                "last_cl_purchase_date DATE,"
+                "rx_strength INT)")
     conn.commit()
     conn.close()
 
@@ -85,12 +87,12 @@ class DBCommands(object):
         self.values = ""
         self.condition = ""
 
-    def _connect(self):
+    def connect(self):
         self.conn = psycopg2.connect(f"dbname='Eyecare' user='postgres' password={password.pg_password} "
                                      "host='localhost' port='5432'")
         self.cur = self.conn.cursor()
 
-    def _commit_close(self):  # Decide to split up in the future. Maybe one for commits/rollbacks and one for closing.
+    def commit_close(self):  # Decide to split up in the future. Maybe one for commits/rollbacks and one for closing.
         self.conn.commit()
         self.conn.close()
 
@@ -118,7 +120,7 @@ class DBCommands(object):
 
     def insert(self, values, slow=True):
         if slow:
-            self._connect()
+            self.connect()
         self._sql_statement_insert(values)
         try:
             self.cur.execute(f"INSERT INTO {self.table} ({self.columns}) VALUES ({self.values})")
@@ -127,13 +129,13 @@ class DBCommands(object):
             self.conn.rollback()
         else:
             if slow:
-                self._commit_close()
+                self.commit_close()
             else:
                 pass
 
     def view(self, table, conditional=None, command=False, field="*", slow=True):
         if slow:
-            self._connect()
+            self.connect()
         if command:
             self.cur.execute(f"SELECT {field} FROM {str(table)} WHERE {str(conditional[0])} {str(conditional[1])}")
         elif conditional:
@@ -147,35 +149,35 @@ class DBCommands(object):
 
     def delete(self, table, conditional, slow=True):
         if slow:
-            self._connect()
+            self.connect()
         self.cur.execute(f"DELETE FROM {str(table)} WHERE {str(conditional[0])} = '{str(conditional[1])}'")
         if slow:
-            self._commit_close()
+            self.commit_close()
 
     def update(self, values, slow=True):
         if slow:
-            self._connect()
+            self.connect()
         self._sql_statement_update(values)
         self.cur.execute(f"UPDATE {self.table} SET {self.columns} WHERE "
                          f"{str(self.condition[0])} = '{str(self.condition[1])}'")
         if slow:
-            self._commit_close()
+            self.commit_close()
 
     def update_avg_dollar(self, patient_id, slow=True):
         if slow:
-            self._connect()     # TODO Work on plpgsql trigger to do this automatically
+            self.connect()     # TODO Work on plpgsql trigger to do this automatically
         self.cur.execute(f"UPDATE patients SET avg_dollar = "
                          f"(SELECT AVG(total_paid) FROM sale WHERE patient = {patient_id})"
                          f"WHERE id = {patient_id}")
         if slow:
-            self._commit_close()
+            self.commit_close()
 
     def update_timestamp(self, patient_id, datetime, slow=True):  # Special for updating a datetime object
         if slow:
-            self._connect()     # TODO Work on figuring out how to update datetime objects into SQL
+            self.connect()     # TODO Work on figuring out how to update datetime objects into SQL
         self.cur.execute(f"UPDATE patients SET last_purchase = '{datetime}' WHERE id = {patient_id}")
         if slow:
-            self._commit_close()
+            self.commit_close()
 
     def rollback(self):
         print('DB Error')

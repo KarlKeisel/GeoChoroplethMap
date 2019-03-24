@@ -3,3 +3,5 @@ __pycache__/
 .pytest_cache/
 password.*
 password_test.*
+end_day_report.*
+life_event_report.*

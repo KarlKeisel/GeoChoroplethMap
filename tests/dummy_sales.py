@@ -6,7 +6,7 @@ big_list = random.sample(range(2119), 1000)
 
 # Will be used to quickly populate data into DB, will have to make something more official for the nightly adding.
 
-ii.db._connect()
+ii.db.connect()
 
 for person in big_list:     # Works! Can also accept a date as a string '2019/02/14'
     person = str(person)
@@ -18,7 +18,7 @@ for person in big_list:     # Works! Can also accept a date as a string '2019/02
     print(", ".split(person) + " had an index error.")
 
 
-ii.db._commit_close()
+ii.db.commit_close()
 
 # TODO Still need to learn how to code triggers into PostgreSQL using pgplsql language.
 # TODO Trigger when patient had a purchase, update 'last_purchase' (Without python code)

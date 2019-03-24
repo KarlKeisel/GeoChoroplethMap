@@ -11,7 +11,7 @@ DATABASE Fixtures
 @pytest.fixture(scope='session')
 def setup_db():
     ii = DBCommands()
-    ii._connect()
+    ii.connect()
     yield ii
     ii.conn.rollback()
     ii.conn.close()

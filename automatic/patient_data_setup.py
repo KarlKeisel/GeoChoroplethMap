@@ -62,7 +62,7 @@ class Patient(object):
     def create_buying_pattern():
         y = int(np.random.normal(3.3, 1.2))
         while y < 1 or y > 5:
-            y = int(np.random.normal(3, 1.2))
+            y = int(np.random.normal(3.3, 1.2))     # Re-roll until within 1 - 5
         return y
 
     def set_new_appointment(self):     # Will add new patients to appointment times. (Doesn't actually set appointment)
@@ -80,7 +80,7 @@ class Patient(object):
 
     def set_appointment(self, id):  # Set appointment and just start from early and go to latest, next day if full.
         # TODO Insert appointment into schedule table.
-        # TODO If error (Due to already exsisting, or on weekend) then call make_valid_appointment to find good time.
+        # TODO If error (Due to already existing, or on weekend) then call make_valid_appointment to find good time.
         pass
 
     def make_valid_appointment(self, appt_date, appt_time):    # Will make sure appointment is valid.
