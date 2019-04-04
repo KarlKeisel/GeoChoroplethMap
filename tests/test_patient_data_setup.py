@@ -6,6 +6,9 @@ import pytest
 
 @pytest.fixture(scope='module')
 def setup_patient():
+
+    pytest.skip("No longer using file. Keeping for reference.")
+
     sample_patient = Patient(100, 5)  # Keira Cannon  age 15 glasses female (Fake patient)
     sample_patient.patient_type = 'glasses'
     return sample_patient

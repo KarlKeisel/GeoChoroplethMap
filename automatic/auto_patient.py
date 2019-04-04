@@ -47,8 +47,8 @@
 
 
 - Have a file separate for buying pattern logic
-    * CSV file?
-    * Dictionary *** Trying this.
+    * CSV file? - No
+    * Dictionary * patient_logic.py (JSON Style with some functions included)
 """
 
 import random
@@ -68,10 +68,9 @@ class NewPatient(object):
         self.number = number
         self.current_day = current_day if current_day else date.today()
         self.db = DBCommands()
-        self.storage = "None"
 
     def patient_selector(self):
-        self.db.connect()
+        # self.db.connect()
         new_patients = self.db.view('patients', field='id, age', command=True, conditional=['last_purchase', 'IS NULL'],
                                     slow=False)     # Pull all patients that have never been seen.
 
@@ -102,8 +101,10 @@ class NewPatient(object):
                 sch = Scheduler(patient_id, days_out, self.current_day)
                 sch.schedule_patient()      # Put patient on schedule
             else:
-                pass
-        self.db.commit_close()
+                days_out = random.randint(7, 14)  # Set date for week to two weeks
+                sch = Scheduler(patient_id, days_out, self.current_day)
+                sch.schedule_patient()  # Put patient on schedule
+        # self.db.commit_close()
 
     def create_patient(self):  # TODO Finish this.
         # Create patient from scratch, calling all other info. ( Maybe turn into its own class / file )
@@ -117,22 +118,30 @@ class Scheduler(object):
     """
     def __init__(self, patient_id, days_out, current_date=None):
         self.patient_id = patient_id
+        self.current_date = current_date if current_date else date.today()
         self.exam_date = self.days_to_date(days_out)    # Date desired for appointment ( 02/05/2019 )
         self.initial_exam_date = self.days_to_date(days_out)
-        self.current_date = current_date if current_date else date.today()
         self.db = DBCommands()
-        self.days = (0, 1, 2, 3, 4)  # Open on weekdays
-        self.time = (10, 17)  # Hours of operation. ( Military time )
-        self.appt_time = 30  # Time per appointment
+        self.db.connect()   # Connect this class to DB
+        self.days = plogic.working_days
+        self.time = plogic.business_hours
+        self.appt_time = plogic.appt_slot
+
+    def __del__(self):
+        self.db.commit_close()
 
     def schedule_patient(self):
-        # Check if date if valid ( Mon - Fri )
-        # Check if a time is available on date ( 10 - 5 , in 30 minute intervals )
-        # Schedule patient in DB
-        with open('Appointments', 'a') as file:
-            file.write(f"Patient {self.patient_id} was scheduled on {self.exam_date}, which is {self.date_difference()}"
-                       f" days from initial appointment date.\n")     # For record purposes.
-        pass
+        self.date_is_valid()
+        appt_time = self.time_is_valid()
+        try:
+            self.db.insert(['schedule', ('patient', self.patient_id), ('appt_date', self.exam_date),
+                            ('appt_time', appt_time)], slow=False)
+        except Exception:
+            self.db.rollback()
+        else:
+            with open('Appointments.txt', 'a') as file:
+                file.write(f"Patient {self.patient_id} was scheduled on {self.exam_date}, which is {self.date_difference()}"
+                           f" days from initial appointment date.\n")     # For record purposes.
 
     def days_to_date(self, days_out):
         return self.current_date + timedelta(days_out)
@@ -140,17 +149,17 @@ class Scheduler(object):
     def date_is_valid(self):
         valid = False
         while not valid:
-            if self.exam_date.weekday() in self.days:
+            if self.exam_date.weekday() in self.days:   # If date is listed as open in self.days
                 valid = True
             else:
-                self.exam_date += timedelta(1)
+                self.exam_date += timedelta(1)          # Advance forward one day
 
     def time_is_valid(self):
         valid = False
         while not valid:
-            appointments = self.db.view("schedule", conditional=['appt_date', self.exam_date])
+            appointments = self.db.view_schedule(self.exam_date)
             if len(appointments) == 0:  # No appointments on that day.
-                appt_time = [self.time[0], 0]
+                appt_time = [self.time[0], 0]   # Book earliest appointment
                 return time(appt_time[0], appt_time[1])
             else:
                 latest_hour = str(appointments[-1][2]).split(":")[0]
@@ -164,11 +173,16 @@ class Scheduler(object):
                     self.date_is_valid()            # Make sure it's a business day
                 else:
                     return time(appt_time[0], appt_time[1])
+        # self.db.conn.close()
         # Check for earliest time available for date. ( 10 - 5 , in 30 minute intervals )
         # If full, add a day and run date_is_valid again.
 
     def date_difference(self):
-        return int(str(self.exam_date - self.initial_exam_date).split(",")[0].split(" ")[0])   # Get difference in days
+        difference = str(self.exam_date - self.initial_exam_date)
+        if "," in difference:
+            return int(difference.split(" ")[0])    # Get difference in days
+        else:
+            return 0    # Same day appointment
 
 
 class ProcessWorkDay(object):
@@ -179,18 +193,35 @@ class ProcessWorkDay(object):
         self.work_date = work_date
         self.work_day = self.is_valid()
         self.next_valid_day = None
+        self.db = DBCommands()
+        self.ii = InsertItem()
+        self.db.connect()
+
+    def __del__(self):
+        self.db.commit_close()
 
     def is_valid(self):
-        # Check if mon - fri
-        # If False, find next_valid_day for all purchases that come up.
-        return False
+        if self.work_date.weekday() in plogic.working_days:
+            return True     # Used for sales that are outside of working days, such as medical or glasses broke.
+        else:
+            return False
 
     def process_day(self):
         if self.work_day:
-            # Pull patients from schedule
-            # Go through each: ( Use a separate file for logic )
-            # Use quick_sale for purchasing
-            pass
+            self.ii.db.connect()
+            patients = self.db.view_schedule(self.work_date)
+            patient_list = []
+            for patient in patients:
+                patient_list.append(patient[1])
+            for patient in patient_list:
+                insurance = self.db.view('patients', conditional=('id', patient), field='insurance')[0][0]
+                auto_patient = self.db.view('auto_patient', ('patient_id', patient))
+                purchase_list = plogic.purchase_list(auto_patient[0])
+                if len(purchase_list) > 0:
+                    self.ii.quick_sale(patient, self.work_date, insurance, purchase_list)
+                else:
+                    pass    # Did not purchase anything, or no showed.
+            self.ii.db.commit_close()
 
     def check_future_appointments(self):
         # Use a separate file for logic
@@ -215,6 +246,12 @@ class ProcessWorkDay(object):
         pass
 
     def record_day(self):
-        # Record date, # appts, total sales amount on CSV file
-        pass
+        totals = self.db.view('sale', conditional=('purchase_time', self.work_date), slow=False)
+        patients = len(totals)
+        total_dollar = 0
+        for person in totals:
+            total_dollar += person[3]
+        with open('Daily_totals.txt', 'a') as file:
+            file.write(f"On {self.work_date} there was {patients} "
+                       f"scheduled and we earned ${total_dollar/100}.\n")
 

@@ -7,9 +7,9 @@ from SQL import sales_inserter as si
 ii = si.InsertItem()
 # print('Asserting if _id_lookup correctly returns an id.')
 # assert ii._id_lookup('patients', 'patient_name', 'Angeles Pollard') == 1332
-
-# ii.quick_sale("1332", None, 'VSP', [1, 5, 6])
-
+# ii.db.connect()
+# ii.quick_sale("1500", None, 'VSP', [1, 5, 6])
+# ii.db.commit_close()
 # ii.insert_sale('Newton Powers', purchase_items=[('Eye Exam', 8500), ('Refraction', 4900)])  # Works!
 
 # ii.db.delete('sale', ('patient', 1332))

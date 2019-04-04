@@ -76,7 +76,7 @@ class InsertItem(object):   # This would connect to the front end to allow DB ed
 
         self.db.update_avg_dollar(patient_id,slow=False)
         self.db.update_timestamp(patient_id, sale_time, slow=False)
-        print(f"Patient {patient_id} recorded.")
+        # print(f"Patient {patient_id} recorded.")
 
 
 class Observer(object):  # Will keep record of any changes so nightly updates are far faster.

@@ -36,8 +36,8 @@ def create_table():     # Creating initial table code
     cur.execute("CREATE TABLE IF NOT EXISTS schedule ("
                 "id SERIAL PRIMARY KEY,"
                 "patient INTEGER REFERENCES patients(id) ON UPDATE CASCADE ON DELETE CASCADE,"
-                "appt_time TIME,"                           # Recorded every 30 minutes, 10 - 5. 14 Total a day.
-                "appt_date DATE,"                           # Mon - Fri only
+                "appt_time TIME NOT NULL,"                  # Recorded every 30 minutes, 10 - 5. 14 Total a day.
+                "appt_date DATE NOT NULL,"                  # Mon - Fri only
                 "appt_type VARCHAR(50),"
                 "showed BOOLEAN,"                           # Did they show up?
                 "UNIQUE (appt_time, appt_date))")           # Cannot have same appointment slot
@@ -125,7 +125,7 @@ class DBCommands(object):
         try:
             self.cur.execute(f"INSERT INTO {self.table} ({self.columns}) VALUES ({self.values})")
         except psycopg2.IntegrityError:
-            print(f"Item: {str(values[0][1])} already exists, use the update command.")  # Checks for duplicate products
+            print(f"Error: {str(values[0][1])} had an issue at entry. Check unique values.")  # Checks for duplicate products
             self.conn.rollback()
         else:
             if slow:
@@ -145,6 +145,11 @@ class DBCommands(object):
         rows = self.cur.fetchall()
         if slow:
             self.conn.close()
+        return rows
+
+    def view_schedule(self, date):
+        self.cur.execute(f"SELECT * FROM schedule WHERE appt_date = '{date}' ORDER BY appt_time")
+        rows = self.cur.fetchall()
         return rows
 
     def delete(self, table, conditional, slow=True):
