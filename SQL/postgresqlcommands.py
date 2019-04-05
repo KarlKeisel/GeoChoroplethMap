@@ -69,7 +69,7 @@ class DBCommands(object):
 
     Ex. [patients, (patient_name, Mark Hammil), (address, 123 Anywhere street)]
 
-    Update: Works like insert in what it expects
+    Update: Works like insert in what it expects, last tuple is the conditional.
 
     Delete: Works the same, except only needs the table and the item in question.
 
@@ -116,7 +116,7 @@ class DBCommands(object):
         self.table = values.pop(0)  # First item table
         self.condition = values.pop()  # Last list/tuple is the conditional
         for column in values:
-            self.columns += str(column[0] + " = " + str(column[1]))
+            self.columns += str(column[0]) + " = " + str(column[1])
 
     def insert(self, values, slow=True):
         if slow:

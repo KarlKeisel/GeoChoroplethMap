@@ -68,6 +68,10 @@ class NewPatient(object):
         self.number = number
         self.current_day = current_day if current_day else date.today()
         self.db = DBCommands()
+        self.db.connect()
+
+    def __del__(self):
+        self.db.commit_close()
 
     def patient_selector(self):
         # self.db.connect()
@@ -97,6 +101,8 @@ class NewPatient(object):
                 rx_str = plogic.create_rx_strength()
                 self.db.insert(["auto_patient", ("patient_id", patient_id), ("buying_pattern", buying_pattern),
                                 ("exam_type", exam_type), ("rx_strength", rx_str)], slow=False)
+                insurance = plogic.create_insurance_type()
+                self.db.update(['patients', ('insurance', insurance), ('id', patient_id)], slow=False)
                 days_out = random.randint(7, 14)    # Set date for week to two weeks
                 sch = Scheduler(patient_id, days_out, self.current_day)
                 sch.schedule_patient()      # Put patient on schedule
@@ -211,16 +217,17 @@ class ProcessWorkDay(object):
             self.ii.db.connect()
             patients = self.db.view_schedule(self.work_date)
             patient_list = []
-            for patient in patients:
+            for patient in patients:    # Seems messy, maybe easier way to do this?
                 patient_list.append(patient[1])
             for patient in patient_list:
-                insurance = self.db.view('patients', conditional=('id', patient), field='insurance')[0][0]
-                auto_patient = self.db.view('auto_patient', ('patient_id', patient))
-                purchase_list = plogic.purchase_list(auto_patient[0])
-                if len(purchase_list) > 0:
-                    self.ii.quick_sale(patient, self.work_date, insurance, purchase_list)
+                insurance = self.db.view('patients', conditional=('id', patient), field='insurance', slow=False)[0][0]
+                auto_patient = self.db.view('auto_patient', ('patient_id', patient), slow=False)
+                if len(auto_patient) == 0:
+                    print(f"Patient {patient} not in auto_patient.")    # Trying to catch a bug
                 else:
-                    pass    # Did not purchase anything, or no showed.
+                    purchase_list = plogic.purchase_list(auto_patient[0])
+                    if len(purchase_list) > 0:
+                        self.ii.quick_sale(patient, self.work_date, insurance, purchase_list)
             self.ii.db.commit_close()
 
     def check_future_appointments(self):

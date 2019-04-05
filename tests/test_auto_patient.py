@@ -149,7 +149,19 @@ def test_process_day(setup_workday):    # Patient list should be 100, 101, 102
     workday.db.delete('sale', ('purchase_time', date(2014, 2, 20)), slow=False)
 
 
-wd = ProcessWorkDay(date(2014, 2, 20))
-wd.process_day()
-wd.db.connect()
-wd.record_day()
+# wd = ProcessWorkDay(date(2014, 2, 20))
+# wd.process_day()
+# wd.db.connect()
+# wd.record_day()
+
+# start_date = date(2015, 1, 1)
+# time_lapse = 30
+#
+# for i in range(time_lapse):
+#     wd = ProcessWorkDay(start_date)
+#     wd.process_day()
+#     wd.db.connect()
+#     wd.record_day()
+#     np = NewPatient(2, start_date)
+#     np.patient_selector()
+#     start_date += timedelta(1)

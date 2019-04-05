@@ -43,6 +43,18 @@ def create_exam_type(age):
         return 'Glasses'
 
 
+def create_insurance_type():
+    chance = random.randint(1, 10)  # SQL Update seems to need the double "'str'" to work.
+    if chance < 4:
+        return "'None'"
+    if chance < 5:
+        return "'Poor'"
+    if chance < 9:
+        return "'Standard'"
+    else:
+        return "'Good'"
+
+
 def purchase_list(auto_patient):
     purchases = []
     _, buying_pattern, buying_pattern, exam_type, last_exam, last_glasses, last_contacts, rx_str = auto_patient
