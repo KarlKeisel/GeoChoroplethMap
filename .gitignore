@@ -7,3 +7,5 @@ end_day_report.*
 life_event_report.*
 reports/
 *.txt
+
+!requirements.txt
