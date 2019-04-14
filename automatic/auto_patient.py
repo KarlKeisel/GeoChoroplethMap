@@ -226,15 +226,33 @@ class ProcessWorkDay(object):
                     print(f"Patient {patient} not in auto_patient.")    # Trying to catch a bug
                 else:
                     purchase_list = plogic.purchase_list(auto_patient[0])
+                    # TODO Work on logic for purchases
                     if len(purchase_list) > 0:
                         self.ii.quick_sale(patient, self.work_date, insurance, purchase_list)
+                        last_purchases = plogic.last_purchase(purchase_list)
+                        for item in last_purchases:
+                            self.db.update(['auto_patient', (item, f"'{self.work_date}'"),
+                                            ('patient_id', patient)], slow=False)   # Extra commas for date object
+                        # TODO Work on trigger in SQL for this!
+
             self.ii.db.commit_close()
 
     def check_future_appointments(self):
-        # Use a separate file for logic
-        # Look through DB for all people who are close to new appointments
-        # If so, run scheduler on them.
-        pass
+        for date in plogic.dates:
+            back_date = self.work_date - timedelta(date)
+            previous_patients = self.db.view('auto_patient', conditional=('last_exam_date', back_date), slow=False)
+            for patient in previous_patients:
+                _, patient_id, buying_pattern, exam_type, last_exam, last_glasses, last_contacts, rx_str = patient
+                insurance = self.db.view('patients', field='insurance',
+                                         conditional=('id', patient_id), slow=False)[0][0]
+                has_insurance = False
+                if insurance in plogic.insurances:
+                    has_insurance = True
+                schedule = plogic.schedule(int(buying_pattern), exam_type, date, has_insurance)
+                if schedule:
+                    days_out = random.randint(7, 14)
+                    sch = Scheduler(patient_id, days_out, self.work_date)
+                    sch.schedule_patient()
 
     def life_happens(self):
         # Use a separate file for logic

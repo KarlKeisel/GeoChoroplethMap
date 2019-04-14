@@ -143,13 +143,24 @@ def test_is_valid(setup_workday):
 def test_process_day(setup_workday):    # Patient list should be 100, 101, 102
     workday = setup_workday
     workday.process_day()
-    workday.db.connect()
+    # workday.db.connect()
     sales = workday.db.view('sale', conditional=('purchase_time', date(2014, 2, 20)), slow=False)
-    assert len(sales) != 0
     workday.db.delete('sale', ('purchase_time', date(2014, 2, 20)), slow=False)
+    assert len(sales) != 0
+
+
+def test_check_future_appointments(setup_workday):
+    workday = setup_workday
+    workday.work_date = date(2015, 2, 20)
+    workday.check_future_appointments()
+    schedule = workday.db.view('schedule', conditional=('patient', 100), slow=False)
+    assert len(schedule) > 1    # Should have a second appointment
+    # Not sure how to clean up easily
 
 
 # wd = ProcessWorkDay(date(2014, 2, 20))
+# wd.check_future_appointments()
+#
 # wd.process_day()
 # wd.db.connect()
 # wd.record_day()
@@ -165,3 +176,16 @@ def test_process_day(setup_workday):    # Patient list should be 100, 101, 102
 #     np = NewPatient(2, start_date)
 #     np.patient_selector()
 #     start_date += timedelta(1)
+
+test = date(2015, 2, 20)
+test2 = test - timedelta(365)
+print(test2)
+
+# db = DBCommands()
+#
+# insurance = db.view('patients', field='insurance', conditional=('id', 1513))[0][0]
+# print(insurance)
+
+
+# db.update(['auto_patient', ('last_glasses_purchase_date', "'2014-02-20'"), ('patient_id', 100)])
+
