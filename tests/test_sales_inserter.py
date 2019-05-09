@@ -3,6 +3,7 @@ Testing sales_inserter plus the DB Commands (Which is imported into sales_insert
 """
 
 from SQL import sales_inserter as si
+from datetime import date
 
 ii = si.InsertItem()
 # print('Asserting if _id_lookup correctly returns an id.')
@@ -38,3 +39,9 @@ if __name__ == '__main__':
 
     sales = ii.db.view('sale')
     print(sales)
+
+    sale_time = date(2014, 2, 20)
+    patient_id = 102
+    sale_id = ii.db.view(f"sale WHERE purchase_time = '{sale_time}' AND patient = {patient_id}", field="id")
+    print(sale_id)
+

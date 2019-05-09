@@ -48,10 +48,10 @@ class InsertItem(object):   # This would connect to the front end to allow DB ed
         self.db.insert(['sale', ('patient', patient_id), ('purchase_time', sale_time),
                         ('total_paid', total_sum), ('used_ins', insurance)])
 
-        sale_id = self._id_lookup('sale', 'purchase_time', sale_time)  # Grab sales id for sale_item table
+        sale_id = self.db.view(f"sale WHERE purchase_time = '{sale_time}' AND patient = {patient_id}", field="id")
 
         for item in items:  # Creating sale_item table
-            self.db.insert(['sale_item', ('product_id', item[0]), ('sale_id', sale_id), ('price', item[1])])
+            self.db.insert(['sale_item', ('product_id', item[0]), ('sale_id', sale_id[0][0]), ('price', item[1])])
 
         self.db.update_avg_dollar(patient_id)
         self.db.update_timestamp(patient, sale_time)
@@ -69,10 +69,12 @@ class InsertItem(object):   # This would connect to the front end to allow DB ed
         self.db.insert(['sale', ('patient', patient_id), ('purchase_time', sale_time),
                         ('total_paid', total_sum), ('used_ins', insurance)], slow=False)
 
-        sale_id = self._id_lookup('sale', 'purchase_time', sale_time, slow=False)
+        sale_id = self.db.view(f"sale WHERE purchase_time = '{sale_time}' AND patient = {patient_id}",
+                             field="id", slow=False)
 
         for item in items:  # Creating sale_item table
-            self.db.insert(['sale_item', ('product_id', item[0]), ('sale_id', sale_id), ('price', item[1])], slow=False)
+            self.db.insert(['sale_item', ('product_id', item[0]), ('sale_id', sale_id[0][0]),
+                            ('price', item[1])], slow=False)
 
         self.db.update_avg_dollar(patient_id,slow=False)
         self.db.update_timestamp(patient_id, sale_time, slow=False)

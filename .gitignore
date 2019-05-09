@@ -7,5 +7,6 @@ end_day_report.*
 life_event_report.*
 reports/
 *.txt
+scratch.py
 
 !requirements.txt

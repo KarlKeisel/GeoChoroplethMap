@@ -44,7 +44,7 @@ def create_table():     # Creating initial table code
     cur.execute("CREATE TABLE IF NOT EXISTS auto_patient ("  # Table for setting up dummy data
                 "id SERIAL PRIMARY KEY,"
                 "patient_id INTEGER REFERENCES patients(id) ON UPDATE CASCADE ON DELETE CASCADE,"
-                "buying_pattern VARCHAR(50),"
+                "buying_pattern INT,"
                 "exam_type VARCHAR(50),"
                 "last_exam_date DATE,"
                 "last_glasses_purchase_date DATE,"
@@ -146,6 +146,22 @@ class DBCommands(object):
         if slow:
             self.conn.close()
         return rows
+
+    def view_free(self, statement, slow=True):  # Added late, probably should've used this from the start.
+        if slow:
+            self.connect()
+        self.cur.execute(statement)
+        rows = self.cur.fetchall()
+        if slow:
+            self.conn.close()
+        return rows
+
+    def cmd_free(self, statement, slow=True):
+        if slow:
+            self.connect()
+        self.cur.execute(statement)
+        if slow:
+            self.commit_close()
 
     def view_schedule(self, date):
         self.cur.execute(f"SELECT * FROM schedule WHERE appt_date = '{date}' ORDER BY appt_time")

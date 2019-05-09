@@ -77,18 +77,29 @@ def purchase_list(auto_patient):
         purchases.extend([11, 19, 23, 24])
     return purchases
 
+#
+# def last_purchase(purchases):
+#     purchased = set()
+#     for item in purchases:
+#         if item in glasses:     # Name of tables in auto_patient
+#             purchased.add("last_glasses_purchase_date")
+#         elif item in contacts:
+#             purchased.add("last_cl_purchase_date")
+#         elif item in exam:
+#             purchased.add("last_exam_date")
+#         else:   # Added in case of future items added.
+#             pass
+#     return purchased
 
-def last_purchase(purchases):
-    purchased = set()
-    for item in purchases:
-        if item in glasses:     # Name of tables in auto_patient
-            purchased.add("last_glasses_purchase_date")
-        elif item in contacts:
-            purchased.add("last_cl_purchase_date")
-        elif item in exam:
-            purchased.add("last_exam_date")
-        else:   # Added in case of future items added.
-            pass
+
+def last_purchase(purchases):   # Expects a list
+    purchased = []
+    if glasses.intersection(purchases):
+        purchased.append("last_glasses_purchase_date")  # Name of columns in auto_patient
+    if contacts.intersection(purchases):
+        purchased.append("last_cl_purchase_date")
+    if exam.intersection(purchases):
+        purchased.append("last_exam_date")
     return purchased
 
 

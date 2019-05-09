@@ -56,6 +56,7 @@ from datetime import datetime, timedelta, date, time
 from SQL.postgresqlcommands import DBCommands
 from SQL.sales_inserter import InsertItem
 from . import patient_logic as plogic   # All of the logic that drives the automation
+from .product_logic import ProductPurchase
 
 
 class NewPatient(object):
@@ -75,8 +76,9 @@ class NewPatient(object):
 
     def patient_selector(self):
         # self.db.connect()
-        new_patients = self.db.view('patients', field='id, age', command=True, conditional=['last_purchase', 'IS NULL'],
-                                    slow=False)     # Pull all patients that have never been seen.
+        new_patients = self.db.view_free("SELECT patients.id, patients.age FROM patients WHERE NOT "
+                                         "EXISTS(SELECT patient FROM schedule WHERE patients.id=schedule.patient)",
+                                         slow=False)     # Pull all patients that have never been seen.
 
         while len(new_patients) < self.number:
             self.create_patient()
@@ -90,10 +92,6 @@ class NewPatient(object):
             age = patient[1]
             info = self.db.view('auto_patient', field="buying_pattern, exam_type",
                                 conditional=["patient_id", patient_id], slow=False)
-            scheduled = self.db.view('schedule', conditional=["patient", patient_id], slow=False)
-            if len(scheduled) > 0:  # If new patient already on schedule but not seen yet.
-                print(f"Patient {patient_id} is already on the schedule.")
-                continue    # Skip patient.
             # Check if patient exists in auto_table
             if len(info) == 0:    # If patient not in auto patient
                 buying_pattern = plogic.create_buying_pattern()
@@ -212,7 +210,7 @@ class ProcessWorkDay(object):
         else:
             return False
 
-    def process_day(self):
+    def process_day(self):      # TODO Work on this!
         if self.work_day:
             self.ii.db.connect()
             patients = self.db.view_schedule(self.work_date)
@@ -225,21 +223,21 @@ class ProcessWorkDay(object):
                 if len(auto_patient) == 0:
                     print(f"Patient {patient} not in auto_patient.")    # Trying to catch a bug
                 else:
-                    purchase_list = plogic.purchase_list(auto_patient[0])
-                    # TODO Work on logic for purchases
+                    auto_product = ProductPurchase(auto_patient[0][1])  # Get id of patient
+                    auto_product.run_sale()
+                    purchase_list = auto_product.purchases
                     if len(purchase_list) > 0:
                         self.ii.quick_sale(patient, self.work_date, insurance, purchase_list)
                         last_purchases = plogic.last_purchase(purchase_list)
-                        for item in last_purchases:
-                            self.db.update(['auto_patient', (item, f"'{self.work_date}'"),
-                                            ('patient_id', patient)], slow=False)   # Extra commas for date object
-                        # TODO Work on trigger in SQL for this!
-
+                        for item in last_purchases:     # Something here is not working, insert test?
+                            self.db.cmd_free(f"UPDATE auto_patient SET {item} = '{self.work_date}' "
+                                             f"WHERE patient_id = {patient}", slow=False)
+            self.db.conn.commit()   # Separate connections
             self.ii.db.commit_close()
 
     def check_future_appointments(self):
-        for date in plogic.dates:
-            back_date = self.work_date - timedelta(date)
+        for day in plogic.dates:
+            back_date = self.work_date - timedelta(day)
             previous_patients = self.db.view('auto_patient', conditional=('last_exam_date', back_date), slow=False)
             for patient in previous_patients:
                 _, patient_id, buying_pattern, exam_type, last_exam, last_glasses, last_contacts, rx_str = patient
@@ -248,7 +246,7 @@ class ProcessWorkDay(object):
                 has_insurance = False
                 if insurance in plogic.insurances:
                     has_insurance = True
-                schedule = plogic.schedule(int(buying_pattern), exam_type, date, has_insurance)
+                schedule = plogic.schedule(int(buying_pattern), exam_type, day, has_insurance)
                 if schedule:
                     days_out = random.randint(7, 14)
                     sch = Scheduler(patient_id, days_out, self.work_date)
@@ -271,6 +269,7 @@ class ProcessWorkDay(object):
         pass
 
     def record_day(self):
+        self.db.connect()
         totals = self.db.view('sale', conditional=('purchase_time', self.work_date), slow=False)
         patients = len(totals)
         total_dollar = 0
@@ -279,4 +278,9 @@ class ProcessWorkDay(object):
         with open('Daily_totals.txt', 'a') as file:
             file.write(f"On {self.work_date} there was {patients} "
                        f"scheduled and we earned ${total_dollar/100}.\n")
+
+    def run_day(self):  # Puts everything together in order.
+        self.process_day()
+        self.check_future_appointments()
+        self.record_day()
 
