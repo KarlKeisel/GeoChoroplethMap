@@ -23,6 +23,8 @@ number: Using numpy, will generate a bell curve of numbers centered around a mea
 Used for ages, and average dollar amounts.
 """
 
+# TODO Update auto patient maker: Remove avg dollar, and remove 'first_purchase'. Fixed in auto_patient.
+
 
 def random_name(number, gender=False):          # Used for name and gender
     people = []  # Returned with names and if needed, genders

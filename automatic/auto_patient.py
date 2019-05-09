@@ -232,6 +232,11 @@ class ProcessWorkDay(object):
                         for item in last_purchases:     # Something here is not working, insert test?
                             self.db.cmd_free(f"UPDATE auto_patient SET {item} = '{self.work_date}' "
                                              f"WHERE patient_id = {patient}", slow=False)
+                        first = self.db.view('patients', ('id', patient), field='first_purchase', slow=False)[0][0]
+                        if first is None or first > self.work_date:
+                            self.db.cmd_free(f"UPDATE patients SET first_purchase = '{self.work_date}' "
+                                             f"WHERE id = {patient}", slow=False)
+
             self.db.conn.commit()   # Separate connections
             self.ii.db.commit_close()
 

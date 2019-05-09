@@ -53,7 +53,6 @@ def setup_scheduler():
 
 
 def test_schedule_patient(setup_scheduler):
-
     sch = setup_scheduler
     sch.exam_date = date(2014, 2, 19)
     sch.schedule_patient()
@@ -162,6 +161,19 @@ def test_check_future_appointments(setup_workday):
     # Not sure how to clean up easily
 
 
+# patient = [100, 101, 102]
+# work_date = date(2014, 2, 20)       # Thursday
+# workday = ProcessWorkDay(work_date)
+# # workday.process_day()
+# # sales = workday.db.view('sale', conditional=('purchase_time', date(2014, 2, 20)), slow=False)
+# for p in patient:
+# # last_purchase = workday.db.view('auto_patient', conditional=('last_exam_date', date(2014, 2, 20)), slow=False)
+#     first = workday.db.view('patients', ('id', p), field='first_purchase', slow=False)[0][0]
+#     if first is None or first > work_date:
+#         workday.db.cmd_free(f"UPDATE patients SET first_purchase = '{work_date}' "
+#                             f"WHERE id = {p}", slow=False)
+# workday.db.delete('sale', ('purchase_time', date(2014, 2, 20)), slow=False)
+
 # wd = ProcessWorkDay(date(2014, 2, 20))
 # wd.check_future_appointments()
 #
@@ -217,9 +229,11 @@ def test_check_future_appointments(setup_workday):
 # test = date(2015, 2, 20)
 # test2 = test - timedelta(365)
 # print(test2)
-
-# db = DBCommands()
 #
+# db = DBCommands()
+# test = db.view('patients', ('id', 102), field='first_purchase')[0][0]
+# print(test)
+
 # insurance = db.view('patients', field='insurance', conditional=('id', 1513))[0][0]
 # print(insurance)
 
