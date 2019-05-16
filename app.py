@@ -21,10 +21,46 @@ A way to auto update from data source to find any changes and to update the info
 
 # Main flask file that holds the front end and connects the back end.
 
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, request
+from flask_sqlalchemy import SQLAlchemy
+from password import pg_password
 import os
 
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://postgres:{pg_password}@localhost/Eyecare'
+# Local db url
+
+db = SQLAlchemy(app)
+db.Model.metadata.reflect(db.engine)
+
+
+class Patients(db.Model):
+    __table__ = db.Model.metadata.tables['patients']
+
+    def __repr__(self):
+        return self.patient_name, self.address
+
+
+class Products(db.Model):
+    __table__ = db.Model.metadata.tables['products']
+
+    def __repr__(self):
+        return self.id, self.product, self.cost
+
+
+class Sale(db.Model):
+    __table__ = db.Model.metadata.tables['sale']
+
+
+class SaleItem(db.Model):
+    __table__ = db.Model.metadata.tables['sale_item']
+
+
+class Schedule(db.Model):
+    __table__ = db.Model.metadata.tables['schedule']
 
 
 @app.route('/')
@@ -42,13 +78,30 @@ def geo_map():
     return render_template('geo_map.html')
 
 
-@app.route('/schedule/')
+@app.route('/schedule/', methods=['GET', 'POST'])
 def schedule():
+    if request.method == "POST":
+        date = request.form['schedule-date']
+        if len(date) > 0:
+            patients = db.session.query(Schedule.appt_time, Patients.patient_name, Schedule.appt_type).filter(Schedule.patient == Patients.id).filter_by(appt_date=date).all()
+            return render_template('schedule.html', data=patients, schedule_date=date)
+        else:
+            return render_template('schedule.html', data=False, schedule_date=date)
+
     return render_template('schedule.html')
 
+# query = db.session.query(table1.col1, table2.col2).filter(table1.col3 == table2.col3)
+# print(query.statement)
+#
+# query2 = db.session.query(table1.col1, table2.col2).join(table2, table1.col3 == table2.col3)
+# print(query.statement)
 # TODO Make a search list to look at patients based on name, average dollar, latest purchase.
 
 
+@app.route('/frontend_explained/')
+def frontend_explained():
+    product = Products.query.order_by(Products.id.desc()).all()
+    return render_template('frontend_explained.html', data=product)  # TODO finish this!
 
 
 @app.route('/backend_explained/')

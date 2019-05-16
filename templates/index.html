@@ -29,7 +29,7 @@
 <body>
 
 <div class="container menu">
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg pl-2">
         <h3 class="title">Random Eye Doctor Business Management Site</h3>
         <div class="container ml-auto">
             <ul class="navbar-nav ml-auto">
@@ -68,9 +68,9 @@
             <button type="button" class="btn btn-lg btn-secondary btn-block"><i class="far fa-question-circle"></i> Data
                 Map / Schedule
             </button>
-            <button type="button" class="btn btn-lg btn-secondary btn-block"><i class="far fa-question-circle"></i>
+            <a href="{{ url_for('frontend_explained') }}" class="btn btn-lg btn-secondary btn-block"><i class="far fa-question-circle"></i>
                 Frontend
-            </button>
+            </a>
             <a href="{{ url_for('backend_explained') }}" class="btn btn-lg btn-secondary btn-block"
                target="main-window"><i class="far fa-question-circle"></i>
                 Backend

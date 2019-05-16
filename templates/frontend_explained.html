@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Frontend Explained</title>
+</head>
+<body>
+<table>
+    <tr>
+        <td>ID</td>
+        <td>Name</td>
+        <td>Cost</td>
+    </tr>
+    {% for i in data %}
+        <tr>
+            <td>{{ i.id }}</td>
+            <td>{{ i.product }}</td>
+            <td>{{ i.cost }}</td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

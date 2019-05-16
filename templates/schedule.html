@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="schedule-window">
 <head>
     <meta charset="UTF-8">
     <title>Schedule</title>
@@ -27,21 +27,71 @@
     <link rel="stylesheet" href="../static/css/master.css">
 
 </head>
-<body class="explain">
+<body class="explain schedule-window">
 
-<div class="row">
-    <div class="col-sm-9">
+<div class="row p-1">
+    <div class="col-sm-8">
         <h2>Schedule</h2>
     </div>
 
-    <div class="col-sm-3">
-        <form class="input-forms">
+
+    <div class="col-sm-4">
+        <form class="input-forms ml-0 mr-0" method="POST" action="{{ url_for('schedule') }}">
             <label for="schedule-date">Schedule Date: </label>
             <input type="date" name="schedule-date" id="schedule-date"/>
+            <input class="btn btn-secondary" type="submit" value="Select Date">
         </form>
     </div>
-
+    {% if schedule_date %}
+        <div class="ml-3">
+            <h5>{{ schedule_date }}</h5>
+        </div>
+    {% endif %}
+    <br>
 </div>
+
+<table class="table table-sm">
+    <thead>
+    <tr>
+        <th scope="col">Time</th>
+        <th scope="col">Patient</th>
+        <th scope="col">Exam Type</th>
+        <th scope="col">Chance to Buy</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if data %}
+        {% for i in data %}
+            <tr>
+                <th scope="row">{{ i.appt_time }}</th>
+                <td>{{ i.patient_name }}</td>
+                <td>{{ i.appt_type }}</td>
+                <!-- {#  <td> Fill in machine learning here. </td>  #} -->
+            </tr>
+        {% endfor %}
+    {% elif not data %}
+        <th scope="col" colspan="4">There is no one scheduled on this day.</th>
+    {% else %}
+        <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+        </tr>
+        <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+        </tr>
+        <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+        </tr>
+    {% endif %}
+    </tbody>
+</table>
 
 <table class="schedule-table">
 

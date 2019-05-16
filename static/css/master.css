@@ -51,6 +51,12 @@ p {
     background-color: #DFB887;
 }
 
+/*Schedule*/
+
+.schedule-window {
+    overflow-x: hidden;
+}
+
 /*Explanation Sections*/
 
 .explain {
