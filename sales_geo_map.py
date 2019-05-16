@@ -40,6 +40,13 @@ def geo_map():
 # TODO Make a search list to look at patients based on name, average dollar, latest purchase.
 
 
+
+
+@app.route('/backend_explained/')
+def backend_explained():
+    return render_template('backend_explained.html')
+
+
 @app.route('/usafavicon.png')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static', 'images'),

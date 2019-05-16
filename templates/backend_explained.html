@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Backend Explained</title>
+
+    <link rel="stylesheet" href="master2.css">
+
+</head>
+<body class="explain">
+<h3>How I got the data and info:</h3>
+
+<p>Since I was not able to convince my boss to let me have all of the personal information of his business, I had to
+    come up with a way to generate data that was at least somewhat realistic.</p>
+<p>So I found a site, Melissa.com that has listings of all carrier routes. I used the melissa_address_scraper.py to
+    borrow and transform those data columns into full addresses. From there, I used mimesis, a python library to fake
+    generate the rest of the data. For age and the like, a simple random generator.</p>
+<p>From that point, I spent the bulk of my time on the sales side. Trying to simulate some sort of natural buying
+    process and a system that takes previous history into account. I know I could have gone far more into this section,
+    but I just wanted something to test my knowledge of machine learning. Being able to just push a button and simulate
+    an office for months or a year made all of the long hours worth it.</p>
+
+</body>
+</html>

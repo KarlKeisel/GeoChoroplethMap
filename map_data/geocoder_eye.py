@@ -52,7 +52,6 @@ class GeocoderAdd(object):
                 df["Coordinates"] = df["Address"].apply(geo_pause)
             except KeyError:
                 return False
-            # TODO Add an exception handle for 'timeout' errors that will try again later.
             else:
                 df["Latitude"] = df["Coordinates"].apply(lambda x: x.latitude if x != None else None)
                 df["Longitude"] = df["Coordinates"].apply(lambda x: x.longitude if x != None else None)

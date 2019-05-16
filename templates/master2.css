@@ -1,0 +1,77 @@
+body {
+    background-color: #AD9665;
+    text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Titillium Web-700', sans-serif;
+}
+
+p {
+    font-family: 'PT Serif', serif;
+}
+
+
+/*Top Bar*/
+
+.title {
+    text-align: left;
+}
+
+.menu {
+    background-color: #DFB887;
+    color: #444;
+    font-weight: bold;
+    padding-right: 0;
+
+}
+
+.main-page {
+    display: flex;
+    flex-direction: column;
+}
+
+/*Side Area*/
+
+.side-menu {
+    padding: 1% 5px;
+}
+
+/*Work Area*/
+
+.work-area {
+    background-color: #226b80;
+    flex-grow: 1;
+}
+
+/*Footer*/
+
+.credits {
+    text-align: left;
+    background-color: #DFB887;
+}
+
+/*Explanation Sections*/
+
+.explain {
+    text-align: left;
+    background-color: #AD9665;
+    color: #444;
+}
+
+/* Breakpoints */
+
+@media (max-width: 768px) {
+    .btn {
+        font-size: 1rem;
+    }
+
+    .side-menu {
+        order: 1;
+    }
+
+    .work-area {
+        order: 2;
+        height: 700px;
+    }
+}
