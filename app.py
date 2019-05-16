@@ -32,11 +32,20 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/intro/')
+def intro():
+    return render_template('intro.html')
+
+
 @app.route('/geo_map/')
 def geo_map():
     return render_template('geo_map.html')
 
-# TODO Make scheduler page that will display the schedule for patients and prediction model. Updates when requested.
+
+@app.route('/schedule/')
+def schedule():
+    return render_template('schedule.html')
+
 # TODO Make a search list to look at patients based on name, average dollar, latest purchase.
 
 
@@ -54,4 +63,4 @@ def favicon():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

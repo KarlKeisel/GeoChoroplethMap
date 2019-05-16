@@ -1,105 +1,77 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #050;
+    background-color: #AD9665;
+    text-align: center;
 }
 
-/*
- * Formatting the header area
- */
-
-header {
-  background-color: #DFB887;
-  height: 35px;
-  width: 100%;
-  opacity: .9;
-  margin-bottom: 10px;
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Titillium Web-700', sans-serif;
 }
 
-header h1.logo {
-  margin: 0;
-  font-size: 1.7em;
-  color: #fff;
-  text-transform: uppercase;
-  float: left;
+p {
+    font-family: 'PT Serif', serif;
 }
 
-header h1.logo:hover {
-  color: #fff;
-  text-decoration: none;
-}
 
-/*
- * Center the body content
- */
+/*Top Bar*/
 
-.container {
-  width: 1000px;
-  margin: 0 auto;
-}
-
-hr {
-    width: 1000px;
-}
-
-h2 {
-  font-size: 3em;
-  margin-top: 40px;
-  text-align: center;
-  letter-spacing: -2px;
-}
-
-h3 {
-  font-size: 1.7em;
-  font-weight: 100;
-  margin-top: 30px;
-  text-align: center;
-  letter-spacing: -1px;
-  color: #999;
+.title {
+    text-align: left;
 }
 
 .menu {
-  float: right;
-  margin-top: 8px;
+    background-color: #DFB887;
+    color: #444;
+    font-weight: bold;
+    padding-right: 0;
+
 }
 
-.menu li {
-  display: inline;
-}
-
-.menu li + li {
-  margin-left: 35px;
-}
-
-.menu li a {
-  color: #444;
-  text-decoration: none;
-}
-
-.menu li span {
-  color: #444;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.status {
-    height: 20%;
-    background-color: #E6E6FA;
-}
-
-.map-box {
-    height: 600px;
-    width: 1000px;
-    background-color: #E6E6FA;
+.main-page {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
 }
 
-.map {
-    height: 500px;
-    width: 900px;
-    position: center;
-    border-color: #005500;
+/*Side Area*/
+
+.side-menu {
+    padding: 1% 5px;
+}
+
+/*Work Area*/
+
+.work-area {
+    background-color: #226b80;
+    flex-grow: 1;
+}
+
+/*Footer*/
+
+.credits {
+    text-align: left;
+    background-color: #DFB887;
+}
+
+/*Explanation Sections*/
+
+.explain {
+    text-align: left;
+    background-color: #AD9665;
+    color: #444;
+}
+
+/* Breakpoints */
+
+@media (max-width: 768px) {
+    .btn {
+        font-size: 1rem;
+    }
+
+    .side-menu {
+        order: 1;
+    }
+
+    .work-area {
+        order: 2;
+        height: 700px;
+    }
 }

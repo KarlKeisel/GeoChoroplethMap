@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Sales Geo Map</title>
-
     <!-- Bootstrap Code -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -24,7 +23,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=PT+Serif|Titillium+Web:400,700" rel="stylesheet">
 
-    <link rel="stylesheet" href="master2.css">
+    <link rel="stylesheet" href="../static/css/master.css">
     <link rel="shortcut icon" href="/usafavicon.png">
 </head>
 <body>
@@ -49,7 +48,7 @@
 
         <!-- Working area -->
         <div class="col-md-10 col-sm-12 work-area">
-            <iframe class="work-area" height="100%" width="100%" src="https://first-news-app.readthedocs.io/en/latest/"
+            <iframe class="work-area" height="100%" width="100%" src="{{ url_for('intro') }}"
                     name="main-window"></iframe>
         </div>
 
@@ -59,23 +58,26 @@
             <a href="{{ url_for('geo_map') }}" class="btn btn-lg btn-warning btn-block" target="main-window"><i
                     class="fas fa-map-marked-alt"></i> Data Map
             </a>
-            <a href="geo_map.html" class="btn btn-lg btn-warning btn-block" target="main-window"><i class="far fa-calendar-alt"></i> Schedule
+            <a href="{{ url_for('schedule') }}" class="btn btn-lg btn-warning btn-block" target="main-window"><i
+                    class="far fa-calendar-alt"></i> Schedule
             </a>
             <button type="button" class="btn btn-lg btn-warning btn-block"><i class="fas fa-users"></i> Patient Search
             </button>
             <hr>
             <h5>Explanations</h5>
             <button type="button" class="btn btn-lg btn-secondary btn-block"><i class="far fa-question-circle"></i> Data
-                Map
+                Map / Schedule
             </button>
             <button type="button" class="btn btn-lg btn-secondary btn-block"><i class="far fa-question-circle"></i>
-                Schedule
+                Frontend
             </button>
-            <a href="{{ url_for('backend_explained') }}" class="btn btn-lg btn-secondary btn-block" target="main-window"><i class="far fa-question-circle"></i>
+            <a href="{{ url_for('backend_explained') }}" class="btn btn-lg btn-secondary btn-block"
+               target="main-window"><i class="far fa-question-circle"></i>
                 Backend
             </a>
             <hr>
-            <a href="https://github.com/KarlKeisel" class="btn btn-lg btn-light btn-block" target="_blank"><i class="fab fa-github"></i>
+            <a href="https://github.com/KarlKeisel" class="btn btn-lg btn-light btn-block" target="_blank"><i
+                    class="fab fa-github"></i>
                 Karl Keisel's Github Link
             </a>
         </div>

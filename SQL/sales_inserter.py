@@ -1,6 +1,6 @@
 """
 Used to insert sales or new patients into the system.
-Will also create a file that will let the cron_updater.py know what has changed.
+Will also create a file that will let the cron_app.py know what has changed.
 """
 
 # TODO Create an observer that will create a change log for the day.
