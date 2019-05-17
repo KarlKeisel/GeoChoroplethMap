@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="schedule-window">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Schedule</title>
+    <title>Patient Search</title>
 
     <!-- Bootstrap Code -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -27,60 +27,47 @@
     <link rel="stylesheet" href="../static/css/master.css">
 
 </head>
-<body class="explain schedule-window" style="overflow-x: hidden">
+<body class="explain patient-window" style="overflow-x: hidden">
 <!-- Could not get overflow-x to work in CSS sheet. Changed to inline. -->
 
 <div class="row p-1">
     <div class="col-sm-8">
-        <h2>Schedule</h2>
+        <h2>Patient Search</h2>
     </div>
 
-
-    <div class="col-sm-4">
-        <form class="input-forms ml-0 mr-0" method="POST" action="{{ url_for('schedule') }}">
-            <label for="schedule-date">Schedule Date: </label>
-            <input type="date" name="schedule-date" id="schedule-date"/>
-            <input class="btn btn-secondary" type="submit" value="Select Date">
+    <div class="col-sm-4 patient-form">
+        <form class="input-forms ml-0 mr-0" method="POST" action="{{ url_for('patient_search') }}">
+            <input class="btn btn-secondary patient-search" type="submit" value="Search"/>
+            <label for="patient-name">Name: </label>
+            <input class="patient" type="text" name="patient-name" value="" id="patient-name"/><br>
+            <label for="avg-top">Average Dollar Top: </label>
+            <input class="form-number patient" type="number" name="avg-top" value="5000" id="avg-top"/><br>
+            <label for="avg-bot">Average Dollar Bot: </label>
+            <input class="form-number patient" type="number" name="avg-bot" value="0" id="avg-bot"/><br>
         </form>
     </div>
-    {% if schedule_date %}
-        <div class="ml-3">
-            <h5>{{ schedule_date }}</h5>
-        </div>
-    {% endif %}
-    <br>
 </div>
 
-<table class="table table-sm">
+<table class="table table-hover table-sm">
     <thead>
     <tr>
-        <th scope="col">Time</th>
-        <th scope="col">Patient</th>
-        <th scope="col">Exam Type</th>
-        <th scope="col">Chance to Buy</th>
+        <th scope="col">Name</th>
+        <th scope="col">Address</th>
+        <th scope="col">Avg Dollar</th>
+        <th scope="col">Last Purchase</th>
     </tr>
     </thead>
     <tbody>
-    {% if data == 'First' %}
-        <th scope="col" colspan="4">Select a date on the picker to view the schedule for that day.</th>
-    {% elif data %}
-        {% for i in data %}
-            <tr>
-                <th scope="row">{{ i.appt_time }}</th>
-                <td>{{ i.patient_name }}</td>
-                <td>{{ i.appt_type }}</td>
-                <!-- {#  <td> Fill in machine learning here. </td>  #} -->
-            </tr>
-        {% endfor %}
-    {% elif not data %}
-        <th scope="col" colspan="4">There is no one scheduled on this day.</th>
-    {% endif %}
+    {% for p in patients %}
+        <tr>
+            <th>{{ p.patient_name }}</th>
+            <td>{{ p.address }}</td>
+            <td>{{ p.avg_dollar / 100 if p.avg_dollar else 0 }}</td>
+            <td>{{ p.last_purchase }}</td>
+        </tr>
+    {% endfor %}
     </tbody>
 </table>
-
-<table class="schedule-table">
-
-</table>
-
+    <!-- Name, AVG Dollar Greater, AVG Dollar Less, -->
 </body>
 </html>

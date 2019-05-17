@@ -3,21 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Frontend Explained</title>
+
+    <link rel="stylesheet" href="../static/css/master.css">
+
 </head>
-<body>
-<table>
-    <tr>
-        <td>ID</td>
-        <td>Name</td>
-        <td>Cost</td>
-    </tr>
-    {% for i in data %}
-        <tr>
-            <td>{{ i.id }}</td>
-            <td>{{ i.product }}</td>
-            <td>{{ i.cost }}</td>
-        </tr>
-    {% endfor %}
-</table>
+<body class="explain">
+<h3>Why I designed front end like I did.</h3>
+
+<p>This was my first big 'business-style' project and I wanted to showcase what I have learned so far, which was python,
+    SQL, bootstrap, with some minor scikit-learn.</p>
+<p>Using python and postgreSQL for my backend, I wanted to use Flask to help display that backend. Flask being fairly
+    easy to play with, I wanted to use it to quickly get my data displayed. Also learning a bit of bootstrap which
+    really helped band aid the places where I would have needed javascript, those two together really helped me get
+    through my first major project.</p>
+<p>After this, I fully plan to embrace Django as I have come to enjoy how it is structured more. As much as I would love
+    to learn all of the fine tunings of CSS to really get around bootstrap, I cannot deny how easy it makes website
+    design in order to get my ideas out.</p>
+<p>Finally, I realize that having no javascript really hinders what I can do on the front end. It is definitely the next
+    thing I plan to learn. Even if I move in the direction of data science, having that power to help display your data
+    on an easy format such as a web page I would consider invaluable.</p>
+
 </body>
 </html>

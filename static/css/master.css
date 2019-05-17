@@ -1,6 +1,8 @@
-body {
+html body {
     background-color: #AD9665;
     text-align: center;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -53,8 +55,23 @@ p {
 
 /*Schedule*/
 
-.schedule-window {
-    overflow-x: hidden;
+
+/*Patient Search*/
+
+.patient-search {
+    display: inline-block;
+    float: left;
+}
+
+.patient {
+    display: inline-block;
+    float: right;
+}
+
+.form-number {
+    width: 20%;
+
+    text-align: right;
 }
 
 /*Explanation Sections*/

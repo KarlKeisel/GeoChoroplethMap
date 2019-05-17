@@ -87,21 +87,27 @@ def schedule():
             return render_template('schedule.html', data=patients, schedule_date=date)
         else:
             return render_template('schedule.html', data=False, schedule_date=date)
+    # TODO Fix horizontal bar on schedule loading.
+    return render_template('schedule.html', data='First')
 
-    return render_template('schedule.html')
 
-# query = db.session.query(table1.col1, table2.col2).filter(table1.col3 == table2.col3)
-# print(query.statement)
-#
-# query2 = db.session.query(table1.col1, table2.col2).join(table2, table1.col3 == table2.col3)
-# print(query.statement)
-# TODO Make a search list to look at patients based on name, average dollar, latest purchase.
+@app.route('/patient_search/', methods=['GET', 'POST'])
+def patient_search():
+    patients = Patients.query.all()
+    if request.method == "POST":
+        return render_template('patient_search.html')
+    return render_template('patient_search.html', patients=patients)
+
+
+@app.route('/patient_search/<patient>')
+def patient_history(patient):
+    return render_template('patient_history.html', patient=patient)
 
 
 @app.route('/frontend_explained/')
 def frontend_explained():
-    product = Products.query.order_by(Products.id.desc()).all()
-    return render_template('frontend_explained.html', data=product)  # TODO finish this!
+    # product = Products.query.order_by(Products.id.desc()).all()
+    return render_template('frontend_explained.html')  # TODO Delete comment.
 
 
 @app.route('/backend_explained/')
