@@ -3,8 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <title>Patient History</title>
-</head>
-<body>
 
+    <!-- Bootstrap Code -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif|Titillium+Web:400,700" rel="stylesheet">
+
+    <link rel="stylesheet" href="../static/css/master.css">
+
+</head>
+<body class="explain" style="overflow-x: hidden">
+<!-- Could not get overflow-x to work in CSS sheet. Changed to inline. -->
+
+<h1>{{ patient }}</h1>
+<br>
+<div class="row">
+    <div class="col-sm-5">
+        <p>{{ patient_info.address }}</p>
+        <p>Insurance Type: {{ patient_info.insurance }}</p>
+        <p>First Purchase: {{ patient_info.first_purchase }}</p>
+    </div>
+    <div class="col-sm-5">
+        <p>Age: {{ patient_info.age }}</p>
+        <p>Avg Dollar: {{ patient_info.avg_dollar / 100 }}</p>
+        <p>Last Purchase: {{ patient_info.last_purchase }}</p>
+    </div>
+    <div class="col-sm-2 text-left">
+        <p>{{ patient_info.gender.capitalize() if patient_info.gender else "" }}</p>
+    </div>
+
+
+</div>
+<!-- Demographics: Address, age, gender -->
+<!-- Insurance, avg_dollar-->
+<!-- First purchased, last purchased-->
+
+<hr>
+
+<!-- Table: -->
+<!-- Row: Date, total sale -->
+<!-- Sales, (named out. Span over multiple rows. Contacts put a times X afterwards.) -->
 </body>
 </html>

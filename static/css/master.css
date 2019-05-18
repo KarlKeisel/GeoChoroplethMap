@@ -58,10 +58,14 @@ p {
 
 /*Patient Search*/
 
-.patient-search {
-    display: inline-block;
-    float: left;
+.form-name {
+
 }
+
+.patient-search {
+    margin: 15px 15px 0 0;
+}
+
 
 .patient {
     display: inline-block;
@@ -69,7 +73,7 @@ p {
 }
 
 .form-number {
-    width: 20%;
+    width: 30%;
 
     text-align: right;
 }

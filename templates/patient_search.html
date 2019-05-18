@@ -31,20 +31,30 @@
 <!-- Could not get overflow-x to work in CSS sheet. Changed to inline. -->
 
 <div class="row p-1">
-    <div class="col-sm-8">
+    <div class="col-sm-6">
         <h2>Patient Search</h2>
     </div>
 
-    <div class="col-sm-4 patient-form">
+    <div class="col-sm-6">
         <form class="input-forms ml-0 mr-0" method="POST" action="{{ url_for('patient_search') }}">
-            <input class="btn btn-secondary patient-search" type="submit" value="Search"/>
-            <label for="patient-name">Name: </label>
-            <input class="patient" type="text" name="patient-name" value="" id="patient-name"/><br>
-            <label for="avg-top">Average Dollar Top: </label>
-            <input class="form-number patient" type="number" name="avg-top" value="5000" id="avg-top"/><br>
-            <label for="avg-bot">Average Dollar Bot: </label>
-            <input class="form-number patient" type="number" name="avg-bot" value="0" id="avg-bot"/><br>
+            <div>
+                <input class="btn btn-secondary patient-search" type="submit" value="Search"/>
+            </div>
+            <div>
+                <label class="form-name" for="patient-name">Name: </label>
+                <input class="patient" type="text" name="patient-name" value="{{ patient if patient else "" }}"
+                       id="patient-name"/><br>
+                <label for="avg-top">Average Dollar Top: </label>
+                <input class="form-number patient" type="number" name="avg-top"
+                       value="{{ avg_top / 100 if avg_top else 5000 }}" id="avg-top"/><br>
+                <label class="label-avg-bot" for="avg-bot">Average Dollar Bot: </label>
+                <input class="form-number patient" type="number" name="avg-bot"
+                       value="{{ avg_bot / 100 if avg_bot else 0 }}" id="avg-bot"/><br>
+            </div>
         </form>
+    </div>
+    <div class="ml-3">
+        <h5>Select a patient to view their history.</h5>
     </div>
 </div>
 
@@ -58,16 +68,25 @@
     </tr>
     </thead>
     <tbody>
-    {% for p in patients %}
+    {% if patients_count > 0 %}
+        {% for p in patients %}
+            <tr>
+                <!-- Only inline style seems to work on color change. -->
+                <th><a class="patient-link" style="color: #444444"
+                       href="{{ url_for('patient_history', patient=p.patient_name) }}">{{ p.patient_name }}</a></th>
+                <td>{{ p.address }}</td>
+                <td>{{ p.avg_dollar / 100 if p.avg_dollar else 0 }}</td>
+                <td>{{ p.last_purchase }}</td>
+            </tr>
+        {% endfor %}
+    {% else %}
         <tr>
-            <th>{{ p.patient_name }}</th>
-            <td>{{ p.address }}</td>
-            <td>{{ p.avg_dollar / 100 if p.avg_dollar else 0 }}</td>
-            <td>{{ p.last_purchase }}</td>
+            <th colspan="4">There are no patients matching that criteria.</th>
+
         </tr>
-    {% endfor %}
+    {% endif %}
     </tbody>
 </table>
-    <!-- Name, AVG Dollar Greater, AVG Dollar Less, -->
+<!-- Name, AVG Dollar Greater, AVG Dollar Less, -->
 </body>
 </html>

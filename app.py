@@ -23,6 +23,7 @@ A way to auto update from data source to find any changes and to update the info
 
 from flask import Flask, render_template, send_from_directory, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import and_
 from password import pg_password
 import os
 
@@ -46,9 +47,6 @@ class Patients(db.Model):
 
 class Products(db.Model):
     __table__ = db.Model.metadata.tables['products']
-
-    def __repr__(self):
-        return self.id, self.product, self.cost
 
 
 class Sale(db.Model):
@@ -83,7 +81,8 @@ def schedule():
     if request.method == "POST":
         date = request.form['schedule-date']
         if len(date) > 0:
-            patients = db.session.query(Schedule.appt_time, Patients.patient_name, Schedule.appt_type).filter(Schedule.patient == Patients.id).filter_by(appt_date=date).all()
+            patients = db.session.query(Schedule.appt_time, Patients.patient_name, Schedule.appt_type).filter(
+                Schedule.patient == Patients.id).filter_by(appt_date=date).all()
             return render_template('schedule.html', data=patients, schedule_date=date)
         else:
             return render_template('schedule.html', data=False, schedule_date=date)
@@ -93,15 +92,26 @@ def schedule():
 
 @app.route('/patient_search/', methods=['GET', 'POST'])
 def patient_search():
-    patients = Patients.query.all()
     if request.method == "POST":
-        return render_template('patient_search.html')
-    return render_template('patient_search.html', patients=patients)
+        patient = request.form['patient-name']
+        avg_top = request.form['avg-top']
+        avg_bot = request.form['avg-bot']
+        avg_top, avg_bot = float(avg_top) * 100, float(avg_bot) * 100
+        patients = Patients.query.filter(and_(Patients.avg_dollar >= avg_bot, Patients.avg_dollar <= avg_top)).filter(
+            Patients.patient_name.like(f'%{patient}%'))
+        patients_count = patients.count()
+        return render_template('patient_search.html', patients=patients, patient=patient, avg_bot=avg_bot,
+                               avg_top=avg_top, patients_count=patients_count)
+    patients = Patients.query.all()
+    return render_template('patient_search.html', patients=patients, patients_count=1)
 
 
 @app.route('/patient_search/<patient>')
 def patient_history(patient):
-    return render_template('patient_history.html', patient=patient)
+    patient = patient.split('%20')
+    patient = str(' '.join(patient))   # Removing the whitespace between first and last name.
+    patient_info = Patients.query.filter_by(patient_name=patient).first()
+    return render_template('patient_history.html', patient=patient, patient_info=patient_info)
 
 
 @app.route('/frontend_explained/')
