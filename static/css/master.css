@@ -1,4 +1,4 @@
-html body {
+body {
     background-color: #AD9665;
     text-align: center;
     max-width: 100%;
@@ -76,6 +76,11 @@ p {
     width: 30%;
 
     text-align: right;
+}
+
+/*Patient History*/
+
+.sale-button {
 }
 
 /*Explanation Sections*/

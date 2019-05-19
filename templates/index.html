@@ -23,7 +23,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=PT+Serif|Titillium+Web:400,700" rel="stylesheet">
 
-    <link rel="stylesheet" href="../static/css/master.css">
+    <link rel="stylesheet" href="/master.css">
     <link rel="shortcut icon" href="/usafavicon.png">
 </head>
 <body>
@@ -66,9 +66,10 @@
             </a>
             <hr>
             <h5>Explanations</h5>
-            <button type="button" class="btn btn-lg btn-secondary btn-block"><i class="far fa-question-circle"></i> Data
-                Map / Schedule
-            </button>
+            <a href="{{ url_for('datamap_explained') }}" class="btn btn-lg btn-secondary btn-block"
+               target="main-window"><i class="far fa-question-circle"></i> Data
+                Map
+            </a>
             <a href="{{ url_for('frontend_explained') }}" class="btn btn-lg btn-secondary btn-block"
                target="main-window"><i class="far fa-question-circle"></i>
                 Frontend

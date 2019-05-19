@@ -106,23 +106,44 @@ def patient_search():
     return render_template('patient_search.html', patients=patients, patients_count=1)
 
 
-@app.route('/patient_search/<patient>')
+@app.route('/patient_search/<patient>/')
 def patient_history(patient):
     patient = patient.split('%20')
-    patient = str(' '.join(patient))   # Removing the whitespace between first and last name.
+    patient = str(' '.join(patient))  # Removing the whitespace between first and last name.
     patient_info = Patients.query.filter_by(patient_name=patient).first()
-    return render_template('patient_history.html', patient=patient, patient_info=patient_info)
+    sale_history = Sale.query.filter_by(patient=patient_info.id)
+    sale_count = sale_history.count()
+    return render_template('patient_history.html', patient=patient, patient_info=patient_info,
+                           sale_history=sale_history, sale_count=sale_count)
+
+
+@app.route('/patient_search/<patient>/<sale_id>/')
+def sale_list(patient, sale_id):
+    sale_id = sale_id
+    sale = Sale.query.filter_by(id=sale_id).first()
+    item_list = db.session.query(Products.product, SaleItem.price).filter(Products.id == SaleItem.product_id).filter(
+        SaleItem.sale_id == sale_id).all()
+    return render_template('sale_list.html', patient=patient, item_list=item_list, sale=sale)
+
+
+@app.route('/datamap_explained/')
+def datamap_explained():
+    return render_template('datamap_explained.html')
 
 
 @app.route('/frontend_explained/')
 def frontend_explained():
-    # product = Products.query.order_by(Products.id.desc()).all()
-    return render_template('frontend_explained.html')  # TODO Delete comment.
+    return render_template('frontend_explained.html')
 
 
 @app.route('/backend_explained/')
 def backend_explained():
     return render_template('backend_explained.html')
+
+
+@app.route('/master.css')
+def css():
+    return send_from_directory(os.path.join(app.root_path, 'static', 'css'), 'master.css')
 
 
 @app.route('/usafavicon.png')

@@ -34,55 +34,35 @@
         <h1>{{ patient }}</h1>
     </div>
     <div class="container-fluid col-sm-4">
-        <a class="btn btn-secondary float-right" href="{{ url_for('patient_search') }}"> Back </a>
+        <a class="btn btn-secondary float-right" href="{{ url_for('patient_history', patient=patient) }}">
+            Back </a>
     </div>
+</div>
+<div class="ml-3">
+    <h5>{{ sale.purchase_time }}</h5>
 </div>
 <br>
-<div class="row">
-    <div class="col-sm-5">
-        <p>{{ patient_info.address }}</p>
-        <p>Insurance Type: {{ patient_info.insurance }}</p>
-        <p>First Purchase: {{ patient_info.first_purchase }}</p>
-    </div>
-    <div class="col-sm-5">
-        <p>Age: {{ patient_info.age }}</p>
-        <p>Avg Dollar: {{ patient_info.avg_dollar / 100 if patient_info.avg_dollar else 0 }}</p>
-        <p>Last Purchase: {{ patient_info.last_purchase }}</p>
-    </div>
-    <div class="col-sm-2 text-left">
-        <p>{{ patient_info.gender.capitalize() if patient_info.gender else "" }}</p>
-    </div>
-</div>
-<hr>
+<!-- Heading of the sale list -->
 <div class="container">
-    <table class="table table-hover table-sm">
+    <table class="table table-sm">
         <thead>
         <tr>
-            <th scope="col">Sale ID</th>
-            <th scope="col">Date</th>
-            <th scope="col">Total Cost</th>
-            <th scope="col">Used Ins</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Price</th>
         </tr>
         </thead>
         <tbody>
-        {% if sale_count > 0 %}
-            {% for sale in sale_history %}
+            {% for item in item_list %}
                 <tr>
                     <!-- Only inline style seems to work on color change. -->
-                    <th><a class="table-link" style="color: #444444"
-                           href="{{ url_for('sale_list', sale_id=sale.id, patient=patient) }}">{{ sale.id }}</a>
-                    </th>
-                    <td>{{ sale.purchase_time }}</td>
-                    <td>{{ sale.total_paid / 100 if sale.total_paid else 0 }}</td>
-                    <td>{{ sale.used_ins }}</td>
+                    <td>{{ item.product }}</td>
+                    <td>{{ item.price / 100 }}</td>
                 </tr>
             {% endfor %}
-        {% else %}
-            <tr>
-                <th colspan="4">There is no purchase history.</th>
-
-            </tr>
-        {% endif %}
+        <tr>
+            <th scope="col">Total</th>
+            <th scope="col">{{ sale.total_paid / 100 }}</th>
+        </tr>
         </tbody>
     </table>
 </div>
