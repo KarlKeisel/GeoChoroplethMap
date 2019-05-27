@@ -207,11 +207,12 @@ class DBCommands(object):
 
 
 if __name__ == '__main__':
-    create_table()
+    # create_table()
     # db = DBCommands()
+    # db.connect()
     # import csv
     #
-    # with open('sample_data.csv') as csv_file:
+    # with open('sample_data_2.csv') as csv_file:
     #     csv_reader = csv.reader(csv_file, delimiter=',')
     #     line_count = 0
     #     for row in csv_reader:
@@ -219,10 +220,13 @@ if __name__ == '__main__':
     #             line_count += 1
     #             continue
     #         try:
-    #             db.insert(['patients', ('patient_name', row[2]), ('address', row[1]),
-    #             ('age', row[4]), ('gender', row[3]), ('lat', row[6]), ('lon', row[7])])
+    #             db.insert(['patients', ('patient_name', row[1]), ('address', row[0]),
+    #             ('age', row[3]), ('gender', row[2]), ('lat', row[4]), ('lon', row[5])], slow=False)
     #         except psycopg2.DataError:
-    #             db.insert(['patients', ('patient_name', row[2]),
-    #             ('address', row[1]), ('age', row[4]), ('gender', row[3])])
+    #             db.insert(['patients', ('patient_name', row[1]),
+    #             ('address', row[0]), ('age', row[3]), ('gender', row[2])], slow=False)
     #         line_count += 1
     #     print(f'Processed {line_count} lines.')
+    # db.commit_close()
+
+    pass

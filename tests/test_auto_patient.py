@@ -216,8 +216,9 @@ def test_check_future_appointments(setup_workday):
 
 """ Test Section """
 
-# start_date = date(2015, 3, 1)   # End date is 2017-11-25
-# time_lapse = 1000
+# start = datetime.now()
+# start_date = date(2015, 3, 1)   # End date is 2019-06-01
+# time_lapse = 1553
 #
 # for i in range(time_lapse):
 #     wd = ProcessWorkDay(start_date)
@@ -225,6 +226,8 @@ def test_check_future_appointments(setup_workday):
 #     np = NewPatient(2, start_date)
 #     np.patient_selector()
 #     start_date += timedelta(1)
+# end = datetime.now()
+# print(end - start)      # About 20 minutes for 1553 runs
 
 # test = date(2015, 2, 20)
 # test2 = test - timedelta(365)
@@ -249,3 +252,4 @@ def test_check_future_appointments(setup_workday):
 #     for line in rows:
 #         file.write("".join(str(line)) + "\n")
 # file.close()
+

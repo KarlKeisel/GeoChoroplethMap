@@ -102,7 +102,7 @@ def patient_search():
         patients_count = patients.count()
         return render_template('patient_search.html', patients=patients, patient=patient, avg_bot=avg_bot,
                                avg_top=avg_top, patients_count=patients_count)
-    patients = Patients.query.all()
+    patients = Patients.query.filter(Patients.avg_dollar >= 1).all()
     return render_template('patient_search.html', patients=patients, patients_count=1)
 
 
@@ -111,7 +111,7 @@ def patient_history(patient):
     patient = patient.split('%20')
     patient = str(' '.join(patient))  # Removing the whitespace between first and last name.
     patient_info = Patients.query.filter_by(patient_name=patient).first()
-    sale_history = Sale.query.filter_by(patient=patient_info.id)
+    sale_history = Sale.query.filter_by(patient=patient_info.id).order_by(Sale.purchase_time)
     sale_count = sale_history.count()
     return render_template('patient_history.html', patient=patient, patient_info=patient_info,
                            sale_history=sale_history, sale_count=sale_count)

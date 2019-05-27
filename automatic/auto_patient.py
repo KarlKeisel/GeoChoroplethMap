@@ -102,11 +102,13 @@ class NewPatient(object):
                 insurance = plogic.create_insurance_type()
                 self.db.update(['patients', ('insurance', insurance), ('id', patient_id)], slow=False)
                 days_out = random.randint(7, 14)    # Set date for week to two weeks
-                sch = Scheduler(patient_id, days_out, self.current_day)
+                sch = Scheduler(patient_id, days_out, self.current_day, exam_type)
                 sch.schedule_patient()      # Put patient on schedule
             else:
+                exam_type = info[0][1]
+                print(exam_type)
                 days_out = random.randint(7, 14)  # Set date for week to two weeks
-                sch = Scheduler(patient_id, days_out, self.current_day)
+                sch = Scheduler(patient_id, days_out, self.current_day, exam_type)
                 sch.schedule_patient()  # Put patient on schedule
         # self.db.commit_close()
 
@@ -120,7 +122,7 @@ class Scheduler(object):
     """
     Takes patient and will schedule them in an appropriate time slot.
     """
-    def __init__(self, patient_id, days_out, current_date=None):
+    def __init__(self, patient_id, days_out, current_date=None, appt_type='Glasses'):
         self.patient_id = patient_id
         self.current_date = current_date if current_date else date.today()
         self.exam_date = self.days_to_date(days_out)    # Date desired for appointment ( 02/05/2019 )
@@ -130,6 +132,7 @@ class Scheduler(object):
         self.days = plogic.working_days
         self.time = plogic.business_hours
         self.appt_time = plogic.appt_slot
+        self.appt_type = appt_type
 
     def __del__(self):
         self.db.commit_close()
@@ -139,13 +142,9 @@ class Scheduler(object):
         appt_time = self.time_is_valid()
         try:
             self.db.insert(['schedule', ('patient', self.patient_id), ('appt_date', self.exam_date),
-                            ('appt_time', appt_time)], slow=False)
+                            ('appt_time', appt_time), ('appt_type', self.appt_type)], slow=False)
         except Exception:
             self.db.rollback()
-        else:
-            with open('Appointments.txt', 'a') as file:
-                file.write(f"Patient {self.patient_id} was scheduled on {self.exam_date}, which is {self.date_difference()}"
-                           f" days from initial appointment date.\n")     # For record purposes.
 
     def days_to_date(self, days_out):
         return self.current_date + timedelta(days_out)
@@ -210,7 +209,7 @@ class ProcessWorkDay(object):
         else:
             return False
 
-    def process_day(self):      # TODO Work on this!
+    def process_day(self):
         if self.work_day:
             self.ii.db.connect()
             patients = self.db.view_schedule(self.work_date)
@@ -218,7 +217,8 @@ class ProcessWorkDay(object):
             for patient in patients:    # Seems messy, maybe easier way to do this?
                 patient_list.append(patient[1])
             for patient in patient_list:
-                insurance = self.db.view('patients', conditional=('id', patient), field='insurance', slow=False)[0][0]
+                data = self.db.view('patients', conditional=('id', patient), field='insurance', slow=False)[0]
+                insurance = data[0]
                 auto_patient = self.db.view('auto_patient', ('patient_id', patient), slow=False)
                 if len(auto_patient) == 0:
                     print(f"Patient {patient} not in auto_patient.")    # Trying to catch a bug
@@ -232,10 +232,6 @@ class ProcessWorkDay(object):
                         for item in last_purchases:     # Something here is not working, insert test?
                             self.db.cmd_free(f"UPDATE auto_patient SET {item} = '{self.work_date}' "
                                              f"WHERE patient_id = {patient}", slow=False)
-                        first = self.db.view('patients', ('id', patient), field='first_purchase', slow=False)[0][0]
-                        if first is None or first > self.work_date:
-                            self.db.cmd_free(f"UPDATE patients SET first_purchase = '{self.work_date}' "
-                                             f"WHERE id = {patient}", slow=False)
 
             self.db.conn.commit()   # Separate connections
             self.ii.db.commit_close()
@@ -273,7 +269,7 @@ class ProcessWorkDay(object):
         # Make sure date is valid
         pass
 
-    def record_day(self):
+    def record_day(self):   # Turned off for the moment.
         self.db.connect()
         totals = self.db.view('sale', conditional=('purchase_time', self.work_date), slow=False)
         patients = len(totals)
@@ -287,5 +283,5 @@ class ProcessWorkDay(object):
     def run_day(self):  # Puts everything together in order.
         self.process_day()
         self.check_future_appointments()
-        self.record_day()
+        # self.record_day()
 
