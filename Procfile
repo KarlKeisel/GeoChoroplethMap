@@ -1,1 +1,1 @@
-web gunicorn sales_geo_map:app
+web gunicorn app:app
