@@ -82,7 +82,6 @@ class NewPatient(object):
 
         while len(new_patients) < self.number:
             self.create_patient()
-            # TODO Append new patient_id to the new_patients list
             print("Not enough patients to add to scheduler.")
             break
 
@@ -112,7 +111,7 @@ class NewPatient(object):
                 sch.schedule_patient()  # Put patient on schedule
         # self.db.commit_close()
 
-    def create_patient(self):  # TODO Finish this.
+    def create_patient(self):
         # Create patient from scratch, calling all other info. ( Maybe turn into its own class / file )
         # Eventually this will also auto make buying pattern and exam type as well. ( Full patient creation )
         pass

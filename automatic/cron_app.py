@@ -12,6 +12,7 @@ Checks sales, updates patient's data, updates geocoordinates, updates choropleth
 from SQL.postgresqlcommands import DBCommands
 from apscheduler.schedulers.blocking import BlockingScheduler
 import datetime as dt
+from automatic.auto_patient import *
 
 sched = BlockingScheduler()
 
@@ -33,14 +34,18 @@ def timed_job():    # Tester
 #     print('This job is run every weekday at 3am.')
 
 
-@sched.scheduled_job('cron', day_of_week='tue-sat', hour=3)
+@sched.scheduled_job('cron', day_of_week='sun-sat', hour=3)
 def scheduled_job():
     date = dt.date
     print('Updating patient information. ' + dt.datetime.now().strftime("%I:%M:%S %p"))
-    print('Entering new patients.' + dt.datetime.now().strftime("%I:%M:%S %p"))
-    print('Entering new sales.' + dt.datetime.now().strftime("%I:%M:%S %p"))
-    print('Running address geocoordinates on unknown addresses.' + dt.datetime.now().strftime("%I:%M:%S %p"))
+    print('Processing new sales.' + dt.datetime.now().strftime("%I:%M:%S %p"))
+    wd = ProcessWorkDay(date)
+    wd.run_day()
+    print('Scheduling new patients.' + dt.datetime.now().strftime("%I:%M:%S %p"))
+    np = NewPatient(2, date)
+    np.patient_selector()
     print('Updating map with new information.' + dt.datetime.now().strftime("%I:%M:%S %p"))
+    # TODO Run map maker
     print('Finished updating.' + dt.datetime.now().strftime("%I:%M:%S %p"))
 
 

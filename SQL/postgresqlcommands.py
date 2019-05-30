@@ -17,7 +17,6 @@ def create_table():     # Creating initial table code
                 "lon NUMERIC,"
                 "first_purchase DATE DEFAULT CURRENT_DATE,"                  # Or first date created
                 "last_purchase DATE)")            # Will have trigger in server, uses python code now.
-    # TODO first_purchase functions more as 'added into system'. Rename or redesign use.
     cur.execute("CREATE TABLE IF NOT EXISTS products ("     # Product list table
                 "id SERIAL PRIMARY KEY,"
                 "product VARCHAR(255) UNIQUE,"

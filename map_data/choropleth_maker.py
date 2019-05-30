@@ -9,19 +9,31 @@ Name, Address, Geo-Coordinates, Age, Average Dollar Amount.
 
 import folium
 import pandas as pd
+from SQL.postgresqlcommands import DBCommands
 
-# TODO provide a link to data / data base when pulling for the file.
-def create_map(file="sample_data.csv"):
 
-    data = pd.read_csv(file)   # Pull out data
+def pull_data():
+    db = DBCommands()
+    columns = ['ID', 'Name', 'Address', 'Ins', 'Average Dollar', 'Age', 'Gender', 'Latitude', 'Longitude',
+               'First Purchase', 'Last Purchase']
+    data = db.view_free('SELECT * FROM patients WHERE avg_dollar IS NOT NULL')
+    df = pd.DataFrame(data, columns=columns)
+    return df
 
-    lat = list(data['Latitude'])
-    lon = list(data['Longitude'])
+
+# TODO Map maker seems busted, fix!!!
+def create_map(data):
+
     name = list(data['Name'])
     address = list(data['Address'])
-    gender = list(data['Gender'])
-    age = list(data['Age'])
+    # Insurance
     avg_dol = list(data['Average Dollar'])
+    age = list(data['Age'])
+    gender = list(data['Gender'])
+    lat = list(data['Latitude'])
+    lon = list(data['Longitude'])
+    # First Purchase
+    # Last Purchase
 
     # Name. <br> Age, Gender. <br> Average Dollar.
     html = """<strong> %s </strong> <br>
@@ -35,29 +47,29 @@ def create_map(file="sample_data.csv"):
         else:
             return 'pink'
 
-    def gender_icon(gen):   # For use in icon display of gender.
+    def gender_icon(gen):  # For use in icon display of gender.
         if gen == 'Male':
             return 'glyphicon-king'
         else:
             return 'glyphicon-queen'
 
     def average_dollar(money):  # Blue to Yellow to Orange; Using tags instead of heat mapping
-        if int(money) < 100:
-            return '#4286f4'    # Deep blue
-        elif int(money) < 200:
-            return '#3fb8f4'    # Blue
-        elif int(money) < 300:
-            return '#3ef2ce'    # Teal
-        elif int(money) < 400:
-            return '#3ef16d'    # Green
+        if int(money) < 200:
+            return '#4286f4'  # Deep blue
+        elif int(money) < 350:
+            return '#3fb8f4'  # Blue
         elif int(money) < 500:
-            return '#dfe238'    # Yellow
+            return '#3ef2ce'  # Teal
+        elif int(money) < 650:
+            return '#3ef16d'  # Green
+        elif int(money) < 800:
+            return '#dfe238'  # Yellow
         else:
-            return '#e2a338'    # Orange
+            return '#e2a338'  # Orange
 
     web_map = folium.Map(location=[34.026165, -84.3277459], no_wrap=True, zoom_start=12)
 
-    fg1 = folium.FeatureGroup(name="Average Dollar")    # Color people by average dollar.
+    fg1 = folium.FeatureGroup(name="Average Dollar")  # Color people by average dollar.
     for lt, ln, nm, sex, ag, dol in zip(lat, lon, name, gender, age, avg_dol):
         try:
             iframe = folium.IFrame(html=html % (nm, ag, sex, dol), width=200, height=100)
@@ -70,3 +82,6 @@ def create_map(file="sample_data.csv"):
     web_map.add_child(folium.LayerControl())
 
     web_map.save("../templates/geo_map.html")
+
+
+create_map(pull_data())

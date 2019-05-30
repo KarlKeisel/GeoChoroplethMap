@@ -14,12 +14,6 @@ import random
 from datetime import date
 from SQL.postgresqlcommands import DBCommands
 
-# TODO System to take in old purchase data, sort into each date of purchases.
-# TODO System to take in buying patterns, age, gender, rx str, purchase type.
-
-# TODO System to break down each product piece. (Frame, lenses, contacts)
-# TODO Take everything and combine it into a single list of purchases, return that list.
-
 
 class ProductPurchase(object):
 
@@ -483,10 +477,6 @@ buy_contacts = {"Year": {5: [98, 98], 4: [95, 95], 3: [50, 70], 2: [30, 50], 1: 
 contacts_amount = {"Year": {"Daily Contacts": 8, "Bi-Weekly Contacts": 8, "Monthly Contacts": 4},
                    "Half Year": {"Daily Contacts": 4, "Bi-Weekly Contacts": 4, "Monthly Contacts": 2},
                    "Three Month": {"Daily Contacts": 2, "Bi-Weekly Contacts": 2, "Monthly Contacts": 2}}
-
-# Every time option is picked, patient is more likely to pick same option.
-# TODO Figure out how to work this out, solid number increase? % Growth?
-loyal_customer = 10
 
 # Glasses options : *** LINKED TO ID OF PRODUCTS IN DB
 

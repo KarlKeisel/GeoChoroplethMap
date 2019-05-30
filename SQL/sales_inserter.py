@@ -3,13 +3,10 @@ Used to insert sales or new patients into the system.
 Will also create a file that will let the cron_app.py know what has changed.
 """
 
-# TODO Create an observer that will create a change log for the day.
 
 import datetime as dt
 from SQL.postgresqlcommands import DBCommands
 
-
-# TODO Create a way to verify patient isn't a duplicate. (Name and age equal current person)
 
 class InsertItem(object):   # This would connect to the front end to allow DB editing
     def __init__(self):
@@ -79,7 +76,3 @@ class InsertItem(object):   # This would connect to the front end to allow DB ed
         self.db.update_avg_dollar(patient_id,slow=False)
         self.db.update_timestamp(patient_id, sale_time, slow=False)
         # print(f"Patient {patient_id} recorded.")
-
-
-class Observer(object):  # Will keep record of any changes so nightly updates are far faster.
-    pass

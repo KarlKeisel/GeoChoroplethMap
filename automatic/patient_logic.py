@@ -55,18 +55,15 @@ def create_insurance_type():
         return "'Good'"
 
 
-def purchase_list(auto_patient):
+def purchase_list(auto_patient):  # Sample function, use product_logic for in depth.
     purchases = []
     _, patient_id, buying_pattern, exam_type, last_exam, last_glasses, last_contacts, rx_str = auto_patient
     # Exam Purchases
     if exam_type == 'Health':
-        # TODO Buying_pattern logic and stuff
         purchases.extend([5, 8, 9])
     elif exam_type == 'Contacts':
-        # TODO Buying_pattern logic
         purchases.extend([1, 5, 6, 9])
     else:
-        # TODO Buying_pattern logic
         purchases.extend([1, 5])
     # Stuff Purchases
     if exam_type == 'Health':
@@ -162,4 +159,3 @@ def schedule(buying_pattern, exam_type, days_out, insurance):
 # 5 Buying pattern, kid 10 years old, glasses. Will buy 1 - 2 pairs. One fancy, and another fancy, or safe pair.
 # Pattern, exam_type, age, % Glasses purchased, glasses types
 
-# TODO Find a way to look at old purchases, very useful for the every other year people.
