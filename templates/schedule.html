@@ -69,7 +69,7 @@
                 <th scope="row">{{ i.appt_time }}</th>
                 <td>{{ i.patient_name }}</td>
                 <td>{{ i.appt_type }}</td>
-                <!-- {#  <td> Fill in machine learning here. </td>  #} -->
+                <th>{{ predicitons.pop(0) }}</th>
             </tr>
         {% endfor %}
     {% elif not data %}

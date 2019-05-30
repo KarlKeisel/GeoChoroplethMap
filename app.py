@@ -6,6 +6,7 @@ from flask import Flask, render_template, send_from_directory, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
 from password import pg_password
+from machine_learning.decision_tree import DTree
 import os
 
 app = Flask(__name__)
@@ -60,11 +61,12 @@ def schedule():
         date = request.form['schedule-date']
         if len(date) > 0:
             patients = db.session.query(Schedule.appt_time, Patients.patient_name, Schedule.appt_type).filter(
-                Schedule.patient == Patients.id).filter_by(appt_date=date).all()
-            return render_template('schedule.html', data=patients, schedule_date=date)
+                Schedule.patient == Patients.id).filter_by(appt_date=date).order_by(Schedule.appt_time).all()
+            decision_tree = DTree(date, (os.path.join(app.root_path, 'machine_learning'), 'glasses_dtree.joblib'))
+            predictions = decision_tree.predict_pattern()
+            return render_template('schedule.html', data=patients, schedule_date=date, predicitons=predictions)
         else:
             return render_template('schedule.html', data=False, schedule_date=date)
-    # TODO Fix horizontal bar on schedule loading.
     return render_template('schedule.html', data='First')
 
 

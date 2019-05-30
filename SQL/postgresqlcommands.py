@@ -186,7 +186,7 @@ class DBCommands(object):
 
     def update_avg_dollar(self, patient_id, slow=True):
         if slow:
-            self.connect()     # TODO Work on plpgsql trigger to do this automatically
+            self.connect()
         self.cur.execute(f"UPDATE patients SET avg_dollar = "
                          f"(SELECT AVG(total_paid) FROM sale WHERE patient = {patient_id})"
                          f"WHERE id = {patient_id}")
@@ -195,7 +195,7 @@ class DBCommands(object):
 
     def update_timestamp(self, patient_id, datetime, slow=True):  # Special for updating a datetime object
         if slow:
-            self.connect()     # TODO Work on figuring out how to update datetime objects into SQL
+            self.connect()
         self.cur.execute(f"UPDATE patients SET last_purchase = '{datetime}' WHERE id = {patient_id}")
         if slow:
             self.commit_close()
