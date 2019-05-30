@@ -42,7 +42,10 @@ class Schedule(db.Model):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    updated = os.path.join(app.root_path, 'automatic', 'updated.txt')
+    with open(updated, 'r') as f:
+        update = str(f.readline())
+    return render_template('index.html', update=update)
 
 
 @app.route('/intro/')

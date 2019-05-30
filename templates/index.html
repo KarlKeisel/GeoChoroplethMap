@@ -28,22 +28,23 @@
 </head>
 <body>
 
-<div class="container menu">
+<div class="container-fluid menu">
     <nav class="navbar navbar-expand-lg pl-2">
-        <h3 class="title">Random Eye Doctor Business Management Site</h3>
+        <h3 class="navbar-brand">Eye Doctor Business Management Site</h3>
         <div class="container ml-auto">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <p>Updated:</p>
-                    <p>05/12/2019</p>
+                    <p>{{ update }}</p>
                 </li>
             </ul>
         </div>
     </nav>
 </div>
 
+<br>
 <!-- Main Page Area -->
-<div class="container main-page">
+<div class="container-fluid main-page">
     <div class="row">
 
         <!-- Working area -->
@@ -55,13 +56,13 @@
         <!-- Side Menu Bar-->
         <div class="col-md-2 col-sm-12 ml-auto menu side-menu">
             <h5>Functions</h5>
-            <a href="{{ url_for('geo_map') }}" class="btn btn-lg btn-warning btn-block" target="main-window"><i
+            <a href="{{ url_for('geo_map') }}" class="btn btn-lg btn-outline-light btn-block" target="main-window"><i
                     class="fas fa-map-marked-alt"></i> Data Map
             </a>
-            <a href="{{ url_for('schedule') }}" class="btn btn-lg btn-warning btn-block" target="main-window"><i
+            <a href="{{ url_for('schedule') }}" class="btn btn-lg btn-outline-light btn-block" target="main-window"><i
                     class="far fa-calendar-alt"></i> Schedule
             </a>
-            <a href="{{ url_for('patient_search') }}" class="btn btn-lg btn-warning btn-block" target="main-window"><i
+            <a href="{{ url_for('patient_search') }}" class="btn btn-lg btn-outline-light btn-block" target="main-window"><i
                     class="fas fa-users"></i> Patient Search
             </a>
             <hr>
@@ -87,7 +88,10 @@
     </div>
 </div>
 
-<div class="container credits">Favicon made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a
+
+<!-- Footer Page Area -->
+<br>
+<div class="container-fluid credits">Favicon made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a
         href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a
         href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
 </div>

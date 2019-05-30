@@ -1,5 +1,5 @@
 body {
-    background-color: #AD9665;
+    background-color: #f3f9fb;
     text-align: center;
     max-width: 100%;
     overflow-x: hidden;
@@ -13,6 +13,10 @@ p {
     font-family: 'PT Serif', serif;
 }
 
+hr {
+    background-color: #f3f9fb;
+    color: #f3f9fb;
+}
 
 /*Top Bar*/
 
@@ -21,8 +25,8 @@ p {
 }
 
 .menu {
-    background-color: #DFB887;
-    color: #444;
+    background-color: #113f67;
+    color: #f3f9fb;
     font-weight: bold;
     padding-right: 0;
 
@@ -42,7 +46,7 @@ p {
 /*Work Area*/
 
 .work-area {
-    background-color: #226b80;
+    background-color: #f3f9fb;
     flex-grow: 1;
 }
 
@@ -50,7 +54,8 @@ p {
 
 .credits {
     text-align: left;
-    background-color: #DFB887;
+    background-color: #113f67;
+    color: #f3f9fb;
 }
 
 /*Schedule*/
@@ -87,8 +92,8 @@ p {
 
 .explain {
     text-align: left;
-    background-color: #AD9665;
-    color: #444;
+    background-color: #f3f9fb;
+    color: #000;
 }
 
 /* Breakpoints */
