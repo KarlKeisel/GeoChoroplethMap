@@ -21,13 +21,12 @@ def pull_data():
     return df
 
 
-# TODO Map maker seems busted, fix!!!
 def create_map(data):
 
     name = list(data['Name'])
     address = list(data['Address'])
     # Insurance
-    avg_dol = list(data['Average Dollar'])
+    avg_dol = list(data['Average Dollar'] / 100)
     age = list(data['Age'])
     gender = list(data['Gender'])
     lat = list(data['Latitude'])
@@ -77,6 +76,8 @@ def create_map(data):
                                               fill=True, fill_opacity=0.8, radius=6))
         except ValueError:  # If Lat or Long is a nan value
             pass
+        except TypeError:
+            pass
 
     web_map.add_child(fg1)
     web_map.add_child(folium.LayerControl())
@@ -84,4 +85,5 @@ def create_map(data):
     web_map.save("../templates/geo_map.html")
 
 
-create_map(pull_data())
+def update_map():
+    create_map(pull_data())
